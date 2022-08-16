@@ -4,24 +4,39 @@ import { Server, Socket } from "socket.io";
 @SocketController()
 export class RoomController {
 
-    @OnMessage("join_game")
+    @OnMessage("join_room")
     public async joinGame(@SocketIO() io: Server, @ConnectedSocket() socket: Socket, @MessageBody() message: any) {
-        console.log("New user joining room: ", message);
+
+        console.log("New user requesting to join room: ", message);
+
+        if(!("roomId" in message)) {
+            console.log("Invalid message object, requires roomId field")
+            return;
+        }
 
         const connectedSockets = io.sockets.adapter.rooms.get(message.roomId);
         const socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id);
         
         if(socketRooms.length > 0) {
-            socket.emit("room_join_error", {
-                error: "You are already in a room!"
+            socket.emit("join_room_response", {
+                    result: "failure",
+                    reason: "Already in room"
             });
+            console.log(`Socket (${socket.id}) tried to join room (${message.roomId}) but is already in a room`)
         } else if(connectedSockets && connectedSockets.size === 2) {
-            socket.emit("room_join_error", {
-                error: "Room is full!"
+            socket.emit("join_room_response", {
+                    result: "failure",
+                    reason: "Room is full"
             });
+            console.log(`Socket (${socket.id}) tried to join room (${message.roomId}) but it was full`)
         } else {
             await socket.join(message.roomId);
-            socket.emit("room_joined");
+            socket.emit("join_room_response", {
+                    result: "success",
+                    reason: "Successfully joined room"
+            });
+            console.log(`Socket (${socket.id}) joined room (${message.roomId})`)
+
         }
     }
 }
