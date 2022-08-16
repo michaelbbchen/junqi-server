@@ -1,8 +1,6 @@
-export interface Board{
-    
-}
+import { IBoard } from "./interfaces/IBoard";
 
-export class JunqiBoard implements Board {
+export class JunqiBoard implements IBoard {
 
 }
 
