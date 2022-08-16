@@ -14,6 +14,11 @@ export class RoomController {
             return;
         }
 
+        if(message.roomId.trim() === "") {
+            console.log("Invalid roomId (cannot be empty): ", message.roomId);
+            return;
+        }
+
         const connectedSockets = io.sockets.adapter.rooms.get(message.roomId);
         const socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id);
         
