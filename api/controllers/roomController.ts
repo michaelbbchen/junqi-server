@@ -41,7 +41,14 @@ export class RoomController {
                     reason: "Successfully joined room"
             });
             console.log(`Socket (${socket.id}) joined room (${message.roomId})`)
-
+            const connectedSockets = io.sockets.adapter.rooms.get(message.roomId);
+            if(connectedSockets?.size === 2) {
+                console.log("Starting game in room", message.roomId);
+                io.to(message.roomId).emit("start_game", {
+                    start: true,
+                    startingPlayer: socket.id
+                })
+            }
         }
     }
 }
