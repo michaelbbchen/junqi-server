@@ -9,6 +9,13 @@ export class GameController {
         
         return gameRoom
     }
+    @OnMessage("ready_up")
+    public async readyUp(@SocketIO() io: Server, @ConnectedSocket() socket: Socket, @MessageBody() message: any) {
+        const gameRoom = this.getSocketGameRoom(socket);
+        //socket.to(gameRoom).emit("ready_up_response", { sid : socket.id });
+        
+        socket.emit("ready_up_response", { state : true })
+    }
     @OnMessage("update_game")
     public async updateGame(@SocketIO() io: Server, @ConnectedSocket() socket: Socket, @MessageBody() message: any) {
         const gameRoom = this.getSocketGameRoom(socket);
