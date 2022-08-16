@@ -1,4 +1,4 @@
-import { JunqiBoard } from "./game";
+import { JunqiBoard } from "./junqi2Player";
 
 describe('board initalization works', function () {
     it('initalize new JunqiBoard', function () {
