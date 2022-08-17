@@ -1,7 +1,7 @@
-import { IJunqiGame } from "./interfaces/IJunqiBoard";
+import { IJunqiGame } from "./interfaces/IJunqiGame";
 import { IBoard } from "./interfaces/IBoard";
 
-export class Junqi2Player implements IJunqiGame {
+export class JunqiTwoPlayer implements IJunqiGame {
     board: IBoard;
     turn: number;
     started: boolean;
@@ -18,7 +18,18 @@ export class Junqi2Player implements IJunqiGame {
     }
 
 
+    // makeMove(){
+    //     this.board.checkLegalMove(move)
+        
+    //     this.board.move();
+
+        
+        
+    // }
+
+
     getBoard(){//return state of board for backend to send to front end
+        this.board.getState();
         //format piecesBoard 
     }
 

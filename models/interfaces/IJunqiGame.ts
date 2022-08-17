@@ -1,4 +1,4 @@
-import { Piece } from "../piece";
+//import { Piece } from "../Piece";
 import { IBoard } from "./IBoard";
 
 export interface IJunqiGame{
@@ -6,6 +6,6 @@ export interface IJunqiGame{
     turn: number;
     started: boolean;
     ready: boolean[]
-    getBoard(): void;
+    getBoard(): void;//TODO figure out return time later
     
 }

@@ -9,18 +9,21 @@ export class Piece{
 }
 
 enum Rank{
-    Flag,
-    Landmine,
-    Bomb,
-    Engineer,
-    Lieutenant,
-    Captain,
-    Major,
-    Colonel,
-    BrigadierGeneral,
-    MajorGeneral,
-    General,
-    FieldMarshal
+    Empty = -1,
+    Flag=0,
+    Engineer=1,
+    Lieutenant=2,
+    Captain=3,
+    Major=4,
+    Colonel=5,
+    BrigadierGeneral=6,
+    MajorGeneral=7,
+    General=8,
+    FieldMarshal = 9,
+    Landmine=10,
+    Bomb=11
+
+
 
 }
 
