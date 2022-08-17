@@ -5,7 +5,7 @@ export interface IJunqiGame{
     board: IBoard;
     turn: number;
     started: boolean;
-    ready: boolean[]
+    ready: Map<string, boolean>
     getBoard(): void;
     
 }
