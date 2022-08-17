@@ -28,9 +28,7 @@ export class Tile{
 
 
 enum TileType{
-    Mountian=-1,
     Post = 1,
     Campsite=2,
-    Frontlines=3,
-    HQ=4,
+    HQ=3
 }

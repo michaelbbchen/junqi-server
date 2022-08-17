@@ -28,7 +28,7 @@ export class JunqiBoard implements IBoard {
         var a5 = new Tile(new Piece(6, 0), 1);
         var a6 = new Tile(new Piece(3, 0), 1);
 
-        var b1 = new Tile(new Piece(0, 0), 4);
+        var b1 = new Tile(new Piece(0, 0), 3);
         var b2 = new Tile(new Piece(10, 0), 1);
         var b3 = new Tile(new Piece(-1, -1), 2);
         var b4 = new Tile(new Piece(7, 0), 1);
@@ -42,7 +42,7 @@ export class JunqiBoard implements IBoard {
         var c5 = new Tile(new Piece(5, 0), 1);
         var c6 = new Tile(new Piece(3, 0), 1);
         
-        var d1 = new Tile(new Piece(11, 0), 4);
+        var d1 = new Tile(new Piece(11, 0), 3);
         var d2 = new Tile(new Piece(10, 0), 1);
         var d3 = new Tile(new Piece(-1, -1), 2);
         var d4 = new Tile(new Piece(7, 0), 1);
@@ -70,7 +70,7 @@ export class JunqiBoard implements IBoard {
         var b9 = new Tile(new Piece(7, 1), 1);
         var b10 = new Tile(new Piece(-1, 1), 2);
         var b11 = new Tile(new Piece(10, 1), 1);
-        var b12 = new Tile(new Piece(0, 1), 4);
+        var b12 = new Tile(new Piece(0, 1), 3);
         
         var c7 = new Tile(new Piece(3, 1), 1);
         var c8 = new Tile(new Piece(5, 1), 1);
@@ -84,7 +84,7 @@ export class JunqiBoard implements IBoard {
         var d9 = new Tile(new Piece(7, 1), 1);
         var d10 = new Tile(new Piece(-1, 1), 2);
         var d11 = new Tile(new Piece(10, 1), 1);
-        var d12 = new Tile(new Piece(11, 1), 4);
+        var d12 = new Tile(new Piece(11, 1), 3);
         
         var e7 = new Tile(new Piece(3, 1), 1);
         var e8 = new Tile(new Piece(6, 1), 1);
@@ -181,48 +181,48 @@ export class JunqiBoard implements IBoard {
         e6.setRailRoadNeighbors([e7, e5, d6]); 
 
         
-        a7.setRoadNeighbors([]);
-        a7.setRailRoadNeighbors([]);  
-        b7.setRoadNeighbors([]);
-        b7.setRailRoadNeighbors([]);  
-        c7.setRoadNeighbors([]);
-        c7.setRailRoadNeighbors([]);  
-        d7.setRoadNeighbors([]);
-        d7.setRailRoadNeighbors([]);  
-        e7.setRoadNeighbors([]);
-        e7.setRailRoadNeighbors([]); 
+        a7.setRoadNeighbors([b8]);
+        a7.setRailRoadNeighbors([a8, a6, b7]);  
+        b7.setRoadNeighbors([b6]);
+        b7.setRailRoadNeighbors([a7, c7]);  
+        c7.setRoadNeighbors([b8, c8, d8]);
+        c7.setRailRoadNeighbors([b7, d7, c6]);  
+        d7.setRoadNeighbors([d8]);
+        d7.setRailRoadNeighbors([c7, e7]);  
+        e7.setRoadNeighbors([d8]);
+        e7.setRailRoadNeighbors([e8, e6, d7]); 
 
-        a8.setRoadNeighbors([]);
-        a8.setRailRoadNeighbors([]);  
-        b8.setRoadNeighbors([]);
+        a8.setRoadNeighbors([b8]);
+        a8.setRailRoadNeighbors([a9, a7]);  
+        b8.setRoadNeighbors([a9, b9, c9, c8, c7, b7, a7, a8]);
         b8.setRailRoadNeighbors([]);  
-        c8.setRoadNeighbors([]);
+        c8.setRoadNeighbors([c9, d8, c7, b8]);
         c8.setRailRoadNeighbors([]);  
-        d8.setRoadNeighbors([]);
-        d6.setRailRoadNeighbors([]);  
-        e8.setRoadNeighbors([]);
-        e8.setRailRoadNeighbors([]); 
+        d8.setRoadNeighbors([c9, d9, e9, e8, e7, d7, c7, c8]);
+        d8.setRailRoadNeighbors([]);  
+        e8.setRoadNeighbors([d8]);
+        e8.setRailRoadNeighbors([e9, e7]); 
 
-        a9.setRoadNeighbors([]);
-        a9.setRailRoadNeighbors([]);  
-        b9.setRoadNeighbors([]);
+        a9.setRoadNeighbors([b10, b9, b8]);
+        a9.setRailRoadNeighbors([a10, a8]);  
+        b9.setRoadNeighbors([b10, a9, c9, b8]);
         b9.setRailRoadNeighbors([]);  
-        c9.setRoadNeighbors([]);
+        c9.setRoadNeighbors([b10, c10, d10, d9, d8, c8, b8, b9]);
         c9.setRailRoadNeighbors([]);  
-        d9.setRoadNeighbors([]);
+        d9.setRoadNeighbors([d10, d8, c9, e9]);
         d9.setRailRoadNeighbors([]);  
-        e9.setRoadNeighbors([]);
-        e9.setRailRoadNeighbors([]); 
+        e9.setRoadNeighbors([d10, d9, d8]);
+        e9.setRailRoadNeighbors([e10, e8]); 
 
-        a10.setRoadNeighbors([]);
-        a10.setRailRoadNeighbors([]);  
-        b10.setRoadNeighbors([]);
+        a10.setRoadNeighbors([b10]);
+        a10.setRailRoadNeighbors([a11, a9]);  
+        b10.setRoadNeighbors([a11, b11, c11, c10, c9, b9, a9, a10]);
         b10.setRailRoadNeighbors([]);  
-        c10.setRoadNeighbors([]);
+        c10.setRoadNeighbors([c11, c9, b10, d10]);
         c10.setRailRoadNeighbors([]);  
-        d10.setRoadNeighbors([]);
+        d10.setRoadNeighbors([c11, d11, e11, e10, e9, d9, c9, c10]);
         d10.setRailRoadNeighbors([]);  
-        e10.setRoadNeighbors([]);
+        e10.setRoadNeighbors([d10]);
         e10.setRailRoadNeighbors([e11, e9]); 
         
         a11.setRoadNeighbors([a12, a10, b10]);
