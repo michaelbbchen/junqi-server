@@ -1,5 +1,6 @@
 import internal from "stream";
 import { IBoard } from "./interfaces/IBoard";
+import { Side } from "./interfaces/IJunqiGame";
 import { Rank } from "./interfaces/IPiece";
 import { ITile } from "./interfaces/ITile";
 import { Piece} from "./Piece";
@@ -55,77 +56,77 @@ export class JunqiBoard implements IBoard {
     private getNewBoard(): Tile[][]{
         //new Tile(new Piece(pieceType, player), tileType)
         //player 0
-        var a1 = new Tile(new Piece(Rank.Bomb , 0), TileType.Post);
-        var a2 = new Tile(new Piece(1, 0), 1);
-        var a3 = new Tile(new Piece(4, 0), 1);
-        var a4 = new Tile(new Piece(2, 0), 1);
-        var a5 = new Tile(new Piece(6, 0), 1);
-        var a6 = new Tile(new Piece(3, 0), 1);
+        var a1 = new Tile(new Piece(Rank.Bomb , Side.Blue), TileType.Post);
+        var a2 = new Tile(new Piece(1, Side.Blue), 1);
+        var a3 = new Tile(new Piece(4, Side.Blue), 1);
+        var a4 = new Tile(new Piece(2, Side.Blue), 1);
+        var a5 = new Tile(new Piece(6, Side.Blue), 1);
+        var a6 = new Tile(new Piece(3, Side.Blue), 1);
 
-        var b1 = new Tile(new Piece(0, 0), 3);
-        var b2 = new Tile(new Piece(10, 0), 1);
-        var b3 = new Tile(new Piece(-1, -1), 2);
-        var b4 = new Tile(new Piece(7, 0), 1);
-        var b5 = new Tile(new Piece(-1, -1), 2);
-        var b6 = new Tile(new Piece(8, 0), 1);
+        var b1 = new Tile(new Piece(0, Side.Blue), 3);
+        var b2 = new Tile(new Piece(10, Side.Blue), 1);
+        var b3 = new Tile(new Piece(-1, Side.Neither), 2);
+        var b4 = new Tile(new Piece(7, Side.Blue), 1);
+        var b5 = new Tile(new Piece(-1, Side.Neither), 2);
+        var b6 = new Tile(new Piece(8, Side.Blue), 1);
 
-        var c1 = new Tile(new Piece(10, 0), 1);
-        var c2 = new Tile(new Piece(10, 0), 1);
-        var c3 = new Tile(new Piece(2, 0), 1);
-        var c4 = new Tile(new Piece(-1, -1), 2);
-        var c5 = new Tile(new Piece(5, 0), 1);
-        var c6 = new Tile(new Piece(3, 0), 1);
+        var c1 = new Tile(new Piece(10, Side.Blue), 1);
+        var c2 = new Tile(new Piece(10, Side.Blue), 1);
+        var c3 = new Tile(new Piece(2, Side.Blue), 1);
+        var c4 = new Tile(new Piece(-1, Side.Neither), 2);
+        var c5 = new Tile(new Piece(5, Side.Blue), 1);
+        var c6 = new Tile(new Piece(3, Side.Blue), 1);
         
-        var d1 = new Tile(new Piece(11, 0), 3);
-        var d2 = new Tile(new Piece(10, 0), 1);
-        var d3 = new Tile(new Piece(-1, -1), 2);
-        var d4 = new Tile(new Piece(7, 0), 1);
-        var d5 = new Tile(new Piece(-1, 0), 2);
-        var d6 = new Tile(new Piece(8, 0), 1);
+        var d1 = new Tile(new Piece(11, Side.Blue), 3);
+        var d2 = new Tile(new Piece(10, Side.Blue), 1);
+        var d3 = new Tile(new Piece(-1, Side.Neither), 2);
+        var d4 = new Tile(new Piece(7, Side.Blue), 1);
+        var d5 = new Tile(new Piece(-1, Side.Blue), 2);
+        var d6 = new Tile(new Piece(8, Side.Blue), 1);
         
-        var e1 = new Tile(new Piece(4 , 0), 1);
-        var e2 = new Tile(new Piece(1, 0), 1);
-        var e3 = new Tile(new Piece(5, 0), 1);
-        var e4 = new Tile(new Piece(2, 0), 1);
-        var e5 = new Tile(new Piece(6, 0), 1);
-        var e6 = new Tile(new Piece(3, 0), 1);
+        var e1 = new Tile(new Piece(4 , Side.Blue), 1);
+        var e2 = new Tile(new Piece(1, Side.Blue), 1);
+        var e3 = new Tile(new Piece(5, Side.Blue), 1);
+        var e4 = new Tile(new Piece(2, Side.Blue), 1);
+        var e5 = new Tile(new Piece(6, Side.Blue), 1);
+        var e6 = new Tile(new Piece(3, Side.Blue), 1);
 
 
         // player 1
-        var a7 = new Tile(new Piece(3, 1), 1);
-        var a8 = new Tile(new Piece(6, 1), 1);
-        var a9 = new Tile(new Piece(2, 1), 1);
-        var a10 = new Tile(new Piece(4, 1), 1);
-        var a11 = new Tile(new Piece(1, 1), 1);
-        var a12 = new Tile(new Piece(11, 1), 1);
+        var a7 = new Tile(new Piece(3, Side.Red), 1);
+        var a8 = new Tile(new Piece(6, Side.Red), 1);
+        var a9 = new Tile(new Piece(2, Side.Red), 1);
+        var a10 = new Tile(new Piece(4, Side.Red), 1);
+        var a11 = new Tile(new Piece(1, Side.Red), 1);
+        var a12 = new Tile(new Piece(11, Side.Red), 1);
 
-        var b7 = new Tile(new Piece(8, 1), 1);
-        var b8 = new Tile(new Piece(-1, 1), 2);
-        var b9 = new Tile(new Piece(7, 1), 1);
-        var b10 = new Tile(new Piece(-1, 1), 2);
-        var b11 = new Tile(new Piece(10, 1), 1);
-        var b12 = new Tile(new Piece(0, 1), 3);
+        var b7 = new Tile(new Piece(8, Side.Red), 1);
+        var b8 = new Tile(new Piece(-1, Side.Neither), 2);
+        var b9 = new Tile(new Piece(7, Side.Red), 1);
+        var b10 = new Tile(new Piece(-1, Side.Neither), 2);
+        var b11 = new Tile(new Piece(10, Side.Red), 1);
+        var b12 = new Tile(new Piece(0, Side.Red), 3);
         
-        var c7 = new Tile(new Piece(3, 1), 1);
-        var c8 = new Tile(new Piece(5, 1), 1);
-        var c9 = new Tile(new Piece(-1, 1), 2);
-        var c10 = new Tile(new Piece(2, 1), 1);
-        var c11 = new Tile(new Piece(10, 1), 1);
-        var c12 = new Tile(new Piece(10, 1), 1);
+        var c7 = new Tile(new Piece(3, Side.Red), 1);
+        var c8 = new Tile(new Piece(5, Side.Red), 1);
+        var c9 = new Tile(new Piece(-1, Side.Neither), 2);
+        var c10 = new Tile(new Piece(2, Side.Red), 1);
+        var c11 = new Tile(new Piece(10, Side.Red), 1);
+        var c12 = new Tile(new Piece(10, Side.Red), 1);
 
-        var d7 = new Tile(new Piece(8, 1), 1);
-        var d8 = new Tile(new Piece(-1, 1), 2);
-        var d9 = new Tile(new Piece(7, 1), 1);
-        var d10 = new Tile(new Piece(-1, 1), 2);
-        var d11 = new Tile(new Piece(10, 1), 1);
-        var d12 = new Tile(new Piece(11, 1), 3);
+        var d7 = new Tile(new Piece(8, Side.Red), 1);
+        var d8 = new Tile(new Piece(-1, Side.Neither), 2);
+        var d9 = new Tile(new Piece(7, Side.Red), 1);
+        var d10 = new Tile(new Piece(-1, Side.Neither), 2);
+        var d11 = new Tile(new Piece(10, Side.Red), 1);
+        var d12 = new Tile(new Piece(11, Side.Red), 3);
         
-        var e7 = new Tile(new Piece(3, 1), 1);
-        var e8 = new Tile(new Piece(6, 1), 1);
-        var e9 = new Tile(new Piece(2, 1), 1);
-        var e10 = new Tile(new Piece(5, 1), 1);
-        var e11 = new Tile(new Piece(1, 1), 1);
-        var e12 = new Tile(new Piece(4, 1), 1);
+        var e7 = new Tile(new Piece(3, Side.Red), 1);
+        var e8 = new Tile(new Piece(6, Side.Red), 1);
+        var e9 = new Tile(new Piece(2, Side.Red), 1);
+        var e10 = new Tile(new Piece(5, Side.Red), 1);
+        var e11 = new Tile(new Piece(1, Side.Red), 1);
+        var e12 = new Tile(new Piece(4, Side.Red), 1);
 
         var newBoard =
         [

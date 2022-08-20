@@ -16,6 +16,7 @@ export interface IJunqiGame{
 }
 
 export enum Side {
+    Neither,
     Blue,
     Red
 }
