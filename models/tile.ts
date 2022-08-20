@@ -27,7 +27,7 @@ export class Tile{
 }
 
 
-enum TileType{
+export enum TileType{
     Post = 1,
     Campsite=2,
     HQ=3

@@ -1,7 +1,7 @@
 import internal from "stream";
 import { IBoard } from "./interfaces/IBoard";
-import { Piece } from "./Piece";
-import { Tile } from "./tile";
+import { Piece, Rank } from "./Piece";
+import { Tile, TileType } from "./tile";
 
 export class JunqiBoard implements IBoard {
 
@@ -21,7 +21,7 @@ export class JunqiBoard implements IBoard {
 
 
         //player 0
-        var a1 = new Tile(new Piece(11 , 0), 1);
+        var a1 = new Tile(new Piece(Rank.Bomb , 0), TileType.Post);
         var a2 = new Tile(new Piece(1, 0), 1);
         var a3 = new Tile(new Piece(4, 0), 1);
         var a4 = new Tile(new Piece(2, 0), 1);

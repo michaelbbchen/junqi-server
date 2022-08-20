@@ -8,7 +8,7 @@ export class Piece{
     }
 }
 
-enum Rank{
+export enum Rank{
     Empty = -1,
     Flag=0,
     Engineer=1,
