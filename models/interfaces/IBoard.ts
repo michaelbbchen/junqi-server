@@ -1,17 +1,17 @@
-import { Piece } from "../Piece";
-import { Tile } from "../Tile";
+import { IPiece } from "./IPiece";
+import { ITile } from "./ITile";
+import { Position } from "../Position";
 
 export interface IBoard{
-    board: Tile[][],
+    board: ITile[][];
 
-    setBoard(board: Tile[][]): void;
-    swap(x1: number, y1: number, x2: number, y2: number): void;
-    makeMove(x1: number, y1: number, x2: number, y2: number): void;
-    isLegalMove(x1: number, y1: number, x2: number, y2: number): boolean;
-    hasPiece(x: number, y: number): boolean;
-    pieceWinner(p1: Piece, p2: Piece): Piece;
+    setTileAt(pos: Position, tile: ITile): void;
+    getTileAt(pos: Position): ITile;
+
+    isLegalMove(pos1: Position, pos2: Position): boolean;
+    makeMove(pos1: Position, pos2: Position): void;
+    swap(pos1: Position, pos2: Position): void;
+
+    hasPiece(pos1: Position): boolean;
     isGameOver(): boolean;
-
-
-    getState(): Tile[][];//TODO: determine return type  TILE[][] TEMPERARY RETURN TYPE
 }

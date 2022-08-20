@@ -1,19 +1,22 @@
-import { Piece } from "./Piece";
+import { ITile } from "./interfaces/ITile";
+import { IPiece} from "./interfaces/IPiece"
 
-export class Tile{
-    piece: Piece;
-    tileType = TileType;
+export class Tile implements ITile {
+    piece: IPiece;
+    tileType: TileType;
 
     railRoadNeighbors: Tile[];
     roadNeighbors: Tile[];
     
-    constructor(piece: Piece, tileType: TileType){
-
+    constructor(piece: IPiece, tileType: TileType){
         this.piece = piece;
-        this.tileType = TileType;
+        this.tileType = tileType;
         this.railRoadNeighbors = [];
         this.roadNeighbors = [];
+    }
 
+    getPiece(): IPiece {
+        return this.piece;
     }
 
     setRailRoadNeighbors(neighbors: Tile[]): void{
@@ -25,7 +28,6 @@ export class Tile{
     }
     
 }
-
 
 export enum TileType{
     Post = 1,

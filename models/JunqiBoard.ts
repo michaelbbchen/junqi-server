@@ -1,25 +1,59 @@
 import internal from "stream";
 import { IBoard } from "./interfaces/IBoard";
-import { Piece, Rank } from "./Piece";
-import { Tile, TileType } from "./tile";
+import { Rank } from "./interfaces/IPiece";
+import { ITile } from "./interfaces/ITile";
+import { Piece} from "./Piece";
+import { Position } from "./Position";
+import { Tile, TileType } from "./Tile";
 
 export class JunqiBoard implements IBoard {
+    board: ITile[][];
 
-    board: Tile[][];
-
-    constructor(){
-        this.board = this.getNewBoard();
+    constructor(boardString: string = ""){
+        if(!boardString) this.board = this.getNewBoard();
+        else {
+            // TODO: initalize board based on what the boardString says
+            this.board = this.getNewBoard();
+        }
     }
-    
 
-    getState(): void {
+    private validPosition(pos: Position) {
+        if(pos.row < 0 || pos.row > this.board.length) return false;
+        if(pos.col < 0 || pos.col > this.board[pos.row].length) return false;
+        return true;
+    }
+
+    setTileAt(pos: Position, tile: ITile): void {
+        if(this.validPosition(pos)) throw new Error("Position given is not on board!");
+        this.board[pos.row][pos.col] = tile;
+    }
+    getTileAt(pos: Position): ITile {
+        // warning: could allow for mutation?
+        return this.board[pos.row][pos.col];
+    }
+
+    isLegalMove(pos1: Position, pos2: Position): boolean {
         throw new Error("Method not implemented.");
     }
 
+    makeMove(pos1: Position, pos2: Position): void {
+        throw new Error("Method not implemented.");
+    }
+
+    swap(pos1: Position, pos2: Position): void {
+        throw new Error("Method not implemented.");
+    }
+
+    hasPiece(pos1: Position): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    isGameOver(): boolean {
+        throw new Error("Method not implemented.");
+    }
+    
     private getNewBoard(): Tile[][]{
         //new Tile(new Piece(pieceType, player), tileType)
-
-
         //player 0
         var a1 = new Tile(new Piece(Rank.Bomb , 0), TileType.Post);
         var a2 = new Tile(new Piece(1, 0), 1);

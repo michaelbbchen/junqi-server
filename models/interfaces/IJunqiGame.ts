@@ -1,4 +1,5 @@
 //import { Piece } from "../Piece";
+import { Position } from "../Position";
 import { IBoard } from "./IBoard";
 
 export interface IJunqiGame{
@@ -6,6 +7,15 @@ export interface IJunqiGame{
     turn: number;
     started: boolean;
     ready: boolean[]
-    getBoard(): void;//TODO figure out return time later
-    
+
+    // makeMove will return true or false depending on whether or not the was successfully made
+    makeMove(pos1: Position, pos2: Position): boolean;
+    swap(pos1: Position, pos2: Position): void;
+    surrender(s: Side) : void;
+    readyUp(s: Side): void;
+}
+
+export enum Side {
+    Blue,
+    Red
 }
