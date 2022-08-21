@@ -1,7 +1,7 @@
 import internal from "stream";
 import { IBoard } from "./interfaces/IBoard";
 import { Side } from "./interfaces/IJunqiGame";
-import { Rank } from "./interfaces/IPiece";
+import { IPiece, Rank } from "./interfaces/IPiece";
 import { ITile } from "./interfaces/ITile";
 import { Piece} from "./Piece";
 import { Position } from "./Position";
@@ -17,6 +17,10 @@ export class JunqiBoard implements IBoard {
             this.board = this.getNewBoard();
         }
     }
+    
+    isLegalSwap(pos1: Position, pos2: Position): boolean {
+        throw new Error("Method not implemented.");
+    }
 
     private validPosition(pos: Position) {
         if(pos.row < 0 || pos.row > this.board.length) return false;
@@ -24,13 +28,14 @@ export class JunqiBoard implements IBoard {
         return true;
     }
 
-    setTileAt(pos: Position, tile: ITile): void {
-        if(this.validPosition(pos)) throw new Error("Position given is not on board!");
-        this.board[pos.row][pos.col] = tile;
+    setPieceAt(pos: Position, piece: IPiece): void {
+        if(!this.validPosition(pos)) throw new Error("Position given is not on board!");
+        this.board[pos.row][pos.col].setPiece(piece);
     }
-    getTileAt(pos: Position): ITile {
+    getPieceAt(pos: Position): IPiece {
         // warning: could allow for mutation?
-        return this.board[pos.row][pos.col];
+        if(!this.validPosition(pos)) throw new Error("Position given is not on board!");
+        return this.board[pos.row][pos.col].getPiece();
     }
 
     isLegalMove(pos1: Position, pos2: Position): boolean {
@@ -57,76 +62,76 @@ export class JunqiBoard implements IBoard {
         //new Tile(new Piece(pieceType, player), tileType)
         //player 0
         var a1 = new Tile(new Piece(Rank.Bomb , Side.Blue), TileType.Post);
-        var a2 = new Tile(new Piece(1, Side.Blue), 1);
-        var a3 = new Tile(new Piece(4, Side.Blue), 1);
-        var a4 = new Tile(new Piece(2, Side.Blue), 1);
-        var a5 = new Tile(new Piece(6, Side.Blue), 1);
-        var a6 = new Tile(new Piece(3, Side.Blue), 1);
+        var a2 = new Tile(new Piece(Rank.Engineer, Side.Blue), TileType.Post);
+        var a3 = new Tile(new Piece(Rank.Major, Side.Blue), TileType.Post);
+        var a4 = new Tile(new Piece(Rank.Lieutenant, Side.Blue), TileType.Post);
+        var a5 = new Tile(new Piece(Rank.BrigadierGeneral, Side.Blue), TileType.Post);
+        var a6 = new Tile(new Piece(Rank.Captain, Side.Blue), TileType.Post);
 
-        var b1 = new Tile(new Piece(0, Side.Blue), 3);
-        var b2 = new Tile(new Piece(10, Side.Blue), 1);
-        var b3 = new Tile(new Piece(-1, Side.Neither), 2);
-        var b4 = new Tile(new Piece(7, Side.Blue), 1);
-        var b5 = new Tile(new Piece(-1, Side.Neither), 2);
-        var b6 = new Tile(new Piece(8, Side.Blue), 1);
+        var b1 = new Tile(new Piece(Rank.Flag, Side.Blue), TileType.HQ);
+        var b2 = new Tile(new Piece(Rank.Landmine, Side.Blue), TileType.Post);
+        var b3 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var b4 = new Tile(new Piece(Rank.MajorGeneral, Side.Blue), TileType.Post);
+        var b5 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var b6 = new Tile(new Piece(Rank.General, Side.Blue), TileType.Post);
 
-        var c1 = new Tile(new Piece(10, Side.Blue), 1);
-        var c2 = new Tile(new Piece(10, Side.Blue), 1);
-        var c3 = new Tile(new Piece(2, Side.Blue), 1);
-        var c4 = new Tile(new Piece(-1, Side.Neither), 2);
-        var c5 = new Tile(new Piece(5, Side.Blue), 1);
-        var c6 = new Tile(new Piece(3, Side.Blue), 1);
+        var c1 = new Tile(new Piece(Rank.Landmine, Side.Blue), TileType.Post);
+        var c2 = new Tile(new Piece(Rank.Landmine, Side.Blue), TileType.Post);
+        var c3 = new Tile(new Piece(Rank.Lieutenant, Side.Blue), TileType.Post);
+        var c4 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var c5 = new Tile(new Piece(Rank.Colonel, Side.Blue), TileType.Post);
+        var c6 = new Tile(new Piece(Rank.Captain, Side.Blue), TileType.Post);
         
-        var d1 = new Tile(new Piece(11, Side.Blue), 3);
-        var d2 = new Tile(new Piece(10, Side.Blue), 1);
-        var d3 = new Tile(new Piece(-1, Side.Neither), 2);
-        var d4 = new Tile(new Piece(7, Side.Blue), 1);
-        var d5 = new Tile(new Piece(-1, Side.Blue), 2);
-        var d6 = new Tile(new Piece(8, Side.Blue), 1);
+        var d1 = new Tile(new Piece(Rank.Bomb, Side.Blue), TileType.HQ);
+        var d2 = new Tile(new Piece(Rank.Landmine, Side.Blue), TileType.Post);
+        var d3 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var d4 = new Tile(new Piece(Rank.MajorGeneral, Side.Blue), TileType.Post);
+        var d5 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var d6 = new Tile(new Piece(Rank.General, Side.Blue), TileType.Post);
         
-        var e1 = new Tile(new Piece(4 , Side.Blue), 1);
-        var e2 = new Tile(new Piece(1, Side.Blue), 1);
-        var e3 = new Tile(new Piece(5, Side.Blue), 1);
-        var e4 = new Tile(new Piece(2, Side.Blue), 1);
-        var e5 = new Tile(new Piece(6, Side.Blue), 1);
-        var e6 = new Tile(new Piece(3, Side.Blue), 1);
+        var e1 = new Tile(new Piece(Rank.Major , Side.Blue), TileType.Post);
+        var e2 = new Tile(new Piece(Rank.Engineer, Side.Blue), TileType.Post);
+        var e3 = new Tile(new Piece(Rank.Colonel, Side.Blue), TileType.Post);
+        var e4 = new Tile(new Piece(Rank.Lieutenant, Side.Blue), TileType.Post);
+        var e5 = new Tile(new Piece(Rank.BrigadierGeneral, Side.Blue), TileType.Post);
+        var e6 = new Tile(new Piece(Rank.Captain, Side.Blue), TileType.Post);
 
 
         // player 1
-        var a7 = new Tile(new Piece(3, Side.Red), 1);
-        var a8 = new Tile(new Piece(6, Side.Red), 1);
-        var a9 = new Tile(new Piece(2, Side.Red), 1);
-        var a10 = new Tile(new Piece(4, Side.Red), 1);
-        var a11 = new Tile(new Piece(1, Side.Red), 1);
-        var a12 = new Tile(new Piece(11, Side.Red), 1);
+        var a7 = new Tile(new Piece(Rank.Captain, Side.Red), TileType.Post);
+        var a8 = new Tile(new Piece(Rank.BrigadierGeneral, Side.Red), TileType.Post);
+        var a9 = new Tile(new Piece(Rank.Lieutenant, Side.Red), TileType.Post);
+        var a10 = new Tile(new Piece(Rank.Major, Side.Red), TileType.Post);
+        var a11 = new Tile(new Piece(Rank.Engineer, Side.Red), TileType.Post);
+        var a12 = new Tile(new Piece(Rank.Bomb, Side.Red), TileType.Post);
 
-        var b7 = new Tile(new Piece(8, Side.Red), 1);
-        var b8 = new Tile(new Piece(-1, Side.Neither), 2);
-        var b9 = new Tile(new Piece(7, Side.Red), 1);
-        var b10 = new Tile(new Piece(-1, Side.Neither), 2);
-        var b11 = new Tile(new Piece(10, Side.Red), 1);
-        var b12 = new Tile(new Piece(0, Side.Red), 3);
+        var b7 = new Tile(new Piece(Rank.General, Side.Red), TileType.Post);
+        var b8 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var b9 = new Tile(new Piece(Rank.MajorGeneral, Side.Red), TileType.Post);
+        var b10 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var b11 = new Tile(new Piece(Rank.Landmine, Side.Red), TileType.Post);
+        var b12 = new Tile(new Piece(Rank.Flag, Side.Red), TileType.HQ);
         
-        var c7 = new Tile(new Piece(3, Side.Red), 1);
-        var c8 = new Tile(new Piece(5, Side.Red), 1);
-        var c9 = new Tile(new Piece(-1, Side.Neither), 2);
-        var c10 = new Tile(new Piece(2, Side.Red), 1);
-        var c11 = new Tile(new Piece(10, Side.Red), 1);
-        var c12 = new Tile(new Piece(10, Side.Red), 1);
+        var c7 = new Tile(new Piece(Rank.Captain, Side.Red), TileType.Post);
+        var c8 = new Tile(new Piece(Rank.Colonel, Side.Red), TileType.Post);
+        var c9 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var c10 = new Tile(new Piece(Rank.Lieutenant, Side.Red), TileType.Post);
+        var c11 = new Tile(new Piece(Rank.Landmine, Side.Red), TileType.Post);
+        var c12 = new Tile(new Piece(Rank.Landmine, Side.Red), TileType.Post);
 
-        var d7 = new Tile(new Piece(8, Side.Red), 1);
-        var d8 = new Tile(new Piece(-1, Side.Neither), 2);
-        var d9 = new Tile(new Piece(7, Side.Red), 1);
-        var d10 = new Tile(new Piece(-1, Side.Neither), 2);
-        var d11 = new Tile(new Piece(10, Side.Red), 1);
-        var d12 = new Tile(new Piece(11, Side.Red), 3);
+        var d7 = new Tile(new Piece(Rank.General, Side.Red), TileType.Post);
+        var d8 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var d9 = new Tile(new Piece(Rank.MajorGeneral, Side.Red), TileType.Post);
+        var d10 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
+        var d11 = new Tile(new Piece(Rank.Landmine, Side.Red), TileType.Post);
+        var d12 = new Tile(new Piece(Rank.Bomb, Side.Red), TileType.HQ);
         
-        var e7 = new Tile(new Piece(3, Side.Red), 1);
-        var e8 = new Tile(new Piece(6, Side.Red), 1);
-        var e9 = new Tile(new Piece(2, Side.Red), 1);
-        var e10 = new Tile(new Piece(5, Side.Red), 1);
-        var e11 = new Tile(new Piece(1, Side.Red), 1);
-        var e12 = new Tile(new Piece(4, Side.Red), 1);
+        var e7 = new Tile(new Piece(Rank.Captain, Side.Red), TileType.Post);
+        var e8 = new Tile(new Piece(Rank.BrigadierGeneral, Side.Red), TileType.Post);
+        var e9 = new Tile(new Piece(Rank.Lieutenant, Side.Red), TileType.Post);
+        var e10 = new Tile(new Piece(Rank.Colonel, Side.Red), TileType.Post);
+        var e11 = new Tile(new Piece(Rank.Engineer, Side.Red), TileType.Post);
+        var e12 = new Tile(new Piece(Rank.Major, Side.Red), TileType.Post);
 
         var newBoard =
         [
