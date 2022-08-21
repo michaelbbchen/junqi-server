@@ -15,6 +15,14 @@ export class Tile implements ITile {
         this.roadNeighbors = [];
     }
 
+    setPiece(piece: IPiece): void {
+        this.piece = piece;
+    }
+
+    getTileType(): TileType {
+        return this.tileType;
+    }
+
     getPiece(): IPiece {
         return this.piece;
     }
