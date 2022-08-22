@@ -1,4 +1,5 @@
 import internal from "stream";
+import { threadId } from "worker_threads";
 import { IBoard } from "./interfaces/IBoard";
 import { Side } from "./interfaces/IJunqiGame";
 import { IPiece, Rank } from "./interfaces/IPiece";
@@ -19,7 +20,64 @@ export class JunqiBoard implements IBoard {
     }
 
     isLegalSwap(pos1: Position, pos2: Position): boolean {
-        throw new Error("Method not implemented.");
+        if(!this.validPosition(pos1)) throw new Error("Position1 given is not on board!");
+        if(!this.validPosition(pos2)) throw new Error("Position2 given is not on board!");
+
+        let piece1 = this.getPieceAt(pos1);
+        let piece2 = this.getPieceAt(pos2);
+
+        if(piece1.player === Side.Red && piece2.player === Side.Blue){
+            return false;
+        } else if(piece1.player === Side.Blue && piece2.player === Side.Red){
+            return false;
+        }
+
+        if(piece1.player === Side.Red){
+
+            if(piece1.rank === Rank.Flag){
+                return pos2.row === 0 && (pos2.col === 1 || pos2.col === 3);
+            } else if(piece2.rank === Rank.Flag){
+                return pos1.row === 0 && (pos1.col === 1 || pos1.col === 3);
+            }
+
+            if(piece1.rank === Rank.Landmine){
+                return pos2.row == 0 || pos2.row == 1;
+            } else if(piece2.rank === Rank.Landmine){
+                return pos1.row == 0 || pos1.row == 1;
+            } 
+
+            if(piece1.rank === Rank.Bomb){
+                return pos2.row !== 4;
+            }
+            else if(piece2.rank === Rank.Bomb){
+                return pos1.row !== 4;
+            }
+            
+        } else if(piece1.player === Side.Blue){
+
+
+            if(piece1.rank === Rank.Flag){
+                return pos2.row === 11 && (pos2.col === 1 || pos2.col === 3);
+            } else if(piece2.rank === Rank.Flag){
+                return pos1.row === 11 && (pos1.col === 1 || pos1.col === 3);
+            }
+
+            if(piece1.rank === Rank.Landmine){
+                return pos2.row == 10 || pos2.row == 11;
+            } else if(piece2.rank === Rank.Landmine){
+                return pos1.row == 10 || pos1.row == 11;
+            } 
+
+            if(piece1.rank === Rank.Bomb){
+                return pos2.row !== 5;
+            }
+            else if(piece2.rank === Rank.Bomb){
+                return pos1.row !== 5;
+            }
+
+        }
+
+        return true;
     }
 
     private validPosition(pos: Position) {
@@ -32,6 +90,7 @@ export class JunqiBoard implements IBoard {
         if(!this.validPosition(pos)) throw new Error("Position given is not on board!");
         this.board[pos.row][pos.col].setPiece(piece);
     }
+
     getPieceAt(pos: Position): IPiece {
         // warning: could allow for mutation?
         if(!this.validPosition(pos)) throw new Error("Position given is not on board!");
@@ -39,25 +98,53 @@ export class JunqiBoard implements IBoard {
     }
 
     isLegalMove(pos1: Position, pos2: Position): boolean {
+        if(!this.validPosition(pos1)) return  false;
+        if(!this.validPosition(pos2)) return false;
+
+        if(this.getPieceAt(pos1).rank === Rank.Empty){
+            return false;
+        }
+
+
         throw new Error("Method not implemented.");
     }
 
     makeMove(pos1: Position, pos2: Position): void {
-        throw new Error("Method not implemented.");
+        if(this.isLegalMove(pos1, pos2)) throw new Error("Not a legal move");
+        
+        if(!this.hasPiece(pos2)){
+            this.swap(pos1, pos2);
+            return;
+        }
+
+        //TODO: other cases
+
+
     }
 
-    swap(pos1: Position, pos2: Position): void {
-        throw new Error("Method not implemented.");
+    swap(pos1: Position, pos2: Position): boolean {
+        if(!this.isLegalSwap(pos1, pos2)) return false;
+
+        let temp = this.getPieceAt(pos1);
+
+        this.setPieceAt(pos1, this.getPieceAt(pos2));
+        this.setPieceAt(pos2, temp);
+
+        return true;
     }
 
     hasPiece(pos1: Position): boolean {
-        throw new Error("Method not implemented.");
+        if (!this.validPosition(pos1)) throw new Error("Invalid Position");
+
+        return this.getPieceAt(pos1).rank >= 0
     }
 
     isGameOver(): boolean {
         throw new Error("Method not implemented.");
     }
     
+
+
     private getNewBoard(): Tile[][]{
         //new Tile(new Piece(pieceType, player), tileType)
         //player 0

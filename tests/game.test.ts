@@ -90,7 +90,7 @@ describe('board', () => {
         expect(testBoard.getPieceAt(new Position(10, 2))).toStrictEqual(new Piece(Rank.Landmine, Side.Blue));
         expect(testBoard.isLegalSwap(new Position(10, 1), new Position(10, 0))).toBe(true);
         expect(testBoard.isLegalSwap(new Position(10, 1), new Position(10, 2))).toBe(true);
-        expect(testBoard.isLegalSwap(new Position(2, 10), new Position(10, 1))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(10, 2), new Position(10, 1))).toBe(true);
         expect(testBoard.isLegalSwap(new Position(10, 1), new Position(11, 0))).toBe(true);
 
         expect(testBoard.getPieceAt(new Position(1, 1))).toStrictEqual(new Piece(Rank.Landmine, Side.Red));
