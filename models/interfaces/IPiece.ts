@@ -1,14 +1,13 @@
-export class Piece{
-    rank: Rank;
-    player: number;
+import { Side } from "./IJunqiGame";
 
-    constructor(r: Rank, p: number){
-        this.rank = r;
-        this.player= p;
-    }
+export interface IPiece {
+    rank: Rank;
+    player: Side;
+
+    determineWinner(other: IPiece): IPiece | null;
 }
 
-enum Rank{
+export enum Rank{
     Empty = -1,
     Flag=0,
     Engineer=1,
@@ -22,10 +21,5 @@ enum Rank{
     FieldMarshal = 9,
     Landmine=10,
     Bomb=11
-
-
-
 }
-
-
 
