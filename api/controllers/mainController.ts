@@ -1,4 +1,4 @@
-import { SocketController } from "socket-controllers";
+import { OnDisconnect, SocketController } from "socket-controllers";
 import { Socket, Server } from "socket.io";
 import { ConnectedSocket, OnConnect, SocketIO } from "socket-controllers";
 
@@ -9,5 +9,9 @@ export class MainController {
         @ConnectedSocket() socket: Socket,
         @SocketIO() server: Server) {
             console.log(`Socket Connected: ${socket.id}`);
+    }
+    @OnDisconnect()
+    public onDisconnect(@ConnectedSocket() socket: Socket, @SocketIO() server: Server) {
+        console.log(`Socket disconnected: ${socket.id}`);
     }
 }
