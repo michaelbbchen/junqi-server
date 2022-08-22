@@ -12,11 +12,11 @@ const createJunqiGame = (roomName : string, connectedSockets : Set<string>) => {
         board : jb,
         turn : 0,
         started : false,
-        players : new Map([]),
+        players : [],
         ready : new Map([]),
     });
     connectedSockets.forEach((s) => jg.ready.set(s, false));
-    connectedSockets.forEach((s) => jg.players.set(s, s));
+    connectedSockets.forEach((s) => jg.players.push(s));
 
     return jg.save();
 };
@@ -24,18 +24,28 @@ const createJunqiGame = (roomName : string, connectedSockets : Set<string>) => {
 const deletePlayerFromJunqiGame = async (playerName : string) => {
     try{
         console.log(`Deleting player ${playerName} from JunqiGame`);
-        //const game = await JunqiGame.find({ name :  });
+        const game = await JunqiGame.find({ players : playerName });
+        for (let i = 0; i < 2; i++) {
+            if (game[0].players[i] === playerName) {
+                game[0].players[i] = "";
+                await game[0].save();
+            }
+        }
+        if (game[0].players[0] === "" && game[0].players[1] === ""){
+            deleteJunqiGame(game[0].name);
+        }
         //console.log(game);
         
+        
     } catch(e) {
-
+        console.log(e);
     }
 
 };
 
-const deleteJunqiGame = (playerName : string) => {
-    console.log(`Deleting JunqiGame with player ${playerName} in db`);
-    return JunqiGame.deleteMany({ players: playerName });
+const deleteJunqiGame = async (gameName : string) => {
+    console.log(`Deleting JunqiGame ${gameName} in db`);
+    return JunqiGame.deleteMany({ name: gameName });
 };
 
 export { createJunqiGame, deletePlayerFromJunqiGame, deleteJunqiGame };

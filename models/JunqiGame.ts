@@ -7,7 +7,7 @@ export class JunqiGame implements IJunqiGame {
     board: IBoard;
     turn: number;
     started: boolean;
-    players: Map<string, string>;
+    players: string[];
     ready: Map<string, boolean>;
     
     constructor(board: IBoard){
@@ -15,7 +15,7 @@ export class JunqiGame implements IJunqiGame {
         this.board = board;
         this.turn = 0;
         this.started = false;
-        this.players = new Map([]);
+        this.players = [];
         this.ready = new Map([]);
     }
 

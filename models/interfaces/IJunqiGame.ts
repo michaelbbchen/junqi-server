@@ -8,7 +8,7 @@ export interface IJunqiGame{
     board: IBoard;
     turn: number;
     started: boolean;
-    players: Map<string,string>;
+    players: string[];
     ready: Map<string, boolean>;
 
     // makeMove will return true or false depending on whether or not the was successfully made
@@ -25,7 +25,7 @@ export const IJunqiGameSchema : Schema = new Schema({
     board: { type : IBoardSchema, required : true},
     turn: { type : Number, required: true},
     started : { type : Boolean, required : true},
-    players: { type: Map, required : true },
+    players: { type: [String], required : true },
     ready : { type : Map, required : true }
 });
 
