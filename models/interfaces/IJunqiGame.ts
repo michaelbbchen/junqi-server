@@ -13,7 +13,7 @@ export interface IJunqiGame{
 
     // makeMove will return true or false depending on whether or not the was successfully made
     makeMove(pos1: Position, pos2: Position): boolean;
-    swap(pos1: Position, pos2: Position): void;
+    swap(pos1: Position, pos2: Position): boolean;
     surrender(s: Side) : void;
     readyUp(s: Side): void;
 }
