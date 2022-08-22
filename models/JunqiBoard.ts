@@ -17,7 +17,7 @@ export class JunqiBoard implements IBoard {
             this.board = this.getNewBoard();
         }
     }
-    
+
     isLegalSwap(pos1: Position, pos2: Position): boolean {
         throw new Error("Method not implemented.");
     }
@@ -125,7 +125,7 @@ export class JunqiBoard implements IBoard {
         var d10 = new Tile(new Piece(Rank.Empty, Side.Neither), TileType.Campsite);
         var d11 = new Tile(new Piece(Rank.Landmine, Side.Red), TileType.Post);
         var d12 = new Tile(new Piece(Rank.Bomb, Side.Red), TileType.HQ);
-        
+
         var e7 = new Tile(new Piece(Rank.Captain, Side.Red), TileType.Post);
         var e8 = new Tile(new Piece(Rank.BrigadierGeneral, Side.Red), TileType.Post);
         var e9 = new Tile(new Piece(Rank.Lieutenant, Side.Red), TileType.Post);

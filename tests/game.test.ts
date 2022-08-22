@@ -17,7 +17,7 @@ describe('board', () => {
         expect(testBoard.getPieceAt(new Position(9, 2))).toStrictEqual(new Piece(Rank.Lieutenant, Side.Blue));
     })
 
-    it('has same number of tiles on both sides', () => {
+    it('has same number of pieces on both sides', () => {
         const testBoard = new JunqiBoard();
         let redCount = 0;
         let blueCount = 0;
@@ -35,7 +35,7 @@ describe('board', () => {
         expect(blueCount).toBe(25);
     })
 
-    it("throws error on invalid getTileAt position", () => {
+    it("throws error on invalid getPieceAt position", () => {
         const testBoard = new JunqiBoard();
         expect(() => {testBoard.getPieceAt(new Position(-1, -1))}).toThrowError("Position given is not on board!")
         expect(() => {testBoard.getPieceAt(new Position(-1, 5))}).toThrowError("Position given is not on board!")
@@ -43,7 +43,7 @@ describe('board', () => {
         expect(() => {testBoard.getPieceAt(new Position(29, 2))}).toThrowError("Position given is not on board!")
     }) 
 
-    it("throws error on invalid setTileAt position", () => {
+    it("throws error on invalid setPieceAt position", () => {
         const testBoard = new JunqiBoard();
         expect(() => {testBoard.setPieceAt(new Position(-1, -1), new Piece(Rank.Bomb, Side.Blue))}).toThrowError("Position given is not on board!");
         expect(() => {testBoard.setPieceAt(new Position(-5, 4), new Piece(Rank.Bomb, Side.Blue))}).toThrowError("Position given is not on board!");
@@ -51,18 +51,59 @@ describe('board', () => {
         expect(() => {testBoard.setPieceAt(new Position(2, -1), new Piece(Rank.Bomb, Side.Blue))}).toThrowError("Position given is not on board!");
     })
 
-    it("correctly sets and gets tiles", () => {
+    it("correctly sets and gets pieces", () => {
         const testBoard = new JunqiBoard();
         expect(testBoard.getPieceAt(new Position(3, 4))).toStrictEqual(new Piece(Rank.Lieutenant, Side.Red));
         testBoard.setPieceAt(new Position(3, 4), new Piece(Rank.Bomb, Side.Red));
         expect(testBoard.getPieceAt(new Position(3, 4))).toStrictEqual(new Piece(Rank.Bomb, Side.Red));
     })
 
-    it("recognizies invalid swaps", () => {
+    it("cannot swap landmines past second row", () => {
         const testBoard = new JunqiBoard();
         expect(testBoard.getPieceAt(new Position(3, 4))).toStrictEqual(new Piece(Rank.Lieutenant, Side.Red));
-        expect(testBoard.getPieceAt(new Position(1, 1))).toStrictEqual(new Piece(Rank.Lieutenant, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(1, 1))).toStrictEqual(new Piece(Rank.Landmine, Side.Red));
+        expect(testBoard.getPieceAt(new Position(10, 1))).toStrictEqual(new Piece(Rank.Landmine, Side.Blue));
         expect(testBoard.isLegalSwap(new Position(3, 4), new Position(1, 1))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(3, 4), new Position(1, 1))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(10, 1), new Position(8, 0))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(10, 1), new Position(1, 2))).toBe(false);
+    })
+
+    it("can swap landmines in the first or second row", () => {
+        const testBoard = new JunqiBoard();
+        expect(testBoard.getPieceAt(new Position(10, 0))).toStrictEqual(new Piece(Rank.Engineer, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(10, 1))).toStrictEqual(new Piece(Rank.Landmine, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(10, 2))).toStrictEqual(new Piece(Rank.Landmine, Side.Blue));
+        expect(testBoard.isLegalSwap(new Position(10, 1), new Position(10, 0))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(10, 1), new Position(10, 2))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(2, 10), new Position(10, 1))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(10, 1), new Position(11, 0))).toBe(true);
+
+        expect(testBoard.getPieceAt(new Position(1, 1))).toStrictEqual(new Piece(Rank.Landmine, Side.Red));
+        expect(testBoard.getPieceAt(new Position(1, 2))).toStrictEqual(new Piece(Rank.Landmine, Side.Red));
+        expect(testBoard.isLegalSwap(new Position(1, 1), new Position(1, 0))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(1, 1), new Position(1, 2))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(1, 2), new Position(0, 0))).toBe(true);
+    })
+
+    it("cannot swap flag out of HQ", () => {
+        const testBoard = new JunqiBoard();
+        expect(testBoard.getPieceAt(new Position(11, 1))).toStrictEqual(new Piece(Rank.Flag, Side.Blue));
+        expect(testBoard.isLegalSwap(new Position(11, 2), new Position(11, 1))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(11, 2), new Position(3, 4))).toBe(false);
+        expect(testBoard.getPieceAt(new Position(0, 1))).toStrictEqual(new Piece(Rank.Flag, Side.Red));
+        expect(testBoard.isLegalSwap(new Position(0, 1), new Position(3, 4))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(3, 4), new Position(0, 1))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(0, 0), new Position(0, 1))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(0, 1), new Position(0, 0))).toBe(false);
+    });
+
+    it("can swap pieces", () => {
+        const testBoard = new JunqiBoard();
+        expect(testBoard.isLegalSwap(new Position(6, 0), new Position(6, 1))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(6, 0), new Position(6, 2))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(6, 0), new Position(8, 4))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(10, 1), new Position(10, 0))).toBe(true);
     })
 
 })
