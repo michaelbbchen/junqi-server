@@ -191,21 +191,27 @@ export class JunqiBoard implements IBoard {
 
         let piecesArr = [];
         let dict: any = { "1": Rank.Engineer, "2": Rank.Lieutenant, "3": Rank.Captain, "4": Rank.Major, "5": Rank.Colonel, 
-                    "6": Rank.BrigadierGeneral, "7": Rank.MajorGeneral, "8": Rank.Bomb, "9": Rank.FieldMarshal, 
+                    "6": Rank.BrigadierGeneral, "7": Rank.MajorGeneral, "8": Rank.General, "9": Rank.FieldMarshal, 
                     "B": Rank.Bomb, "F": Rank.Flag, "?": Rank.Empty, "L": Rank.Landmine, }
 
          
         let side = Side.Red;
+        let n = 0;
 
         for(let i = 0; i < pieces.length; i++){
 
-
-            if(i === 30){
+            let currChar = pieces[i];
+            
+            if(n < 30){
+                side = Side.Red;
+            } else {
                 side = Side.Blue;
             }
 
-            let currChar = pieces[i];
-            
+            if(currChar === "?"){
+                side = Side.Neither;
+            }
+
             if(currChar === " "){
                 continue;
             }
@@ -215,21 +221,24 @@ export class JunqiBoard implements IBoard {
             }
 
             piecesArr.push(new Piece(dict[currChar], side));
+            n++;
 
         }
-        
-        let n = 0;
-        for(let i = 0; i < newBoard.length; i++){
 
-            if(n >= 60){
-                throw new Error("Invalid Input String: Incorrect Format");
-            }
+        if(n !== 60){
+            throw new Error("Invalid Input String: Incorrect Format");
+        }
+
+        n = 0;
+        for(let i = 0; i < newBoard.length; i++){
 
             for(let j = 0; j < 5; j++){
                 newBoard[i].push(new Tile(piecesArr[n], tilesArr[n]));
                 n++;
             }
         }
+
+
 
 
         newBoard[11][0].setRoadNeighbors([ newBoard[10][0], newBoard[11][1] ]);
