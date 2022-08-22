@@ -2,6 +2,8 @@ import "reflect-metadata";
 import app from "./app";
 import * as http from "http";
 import socketServer from "./socket";
+import mongoose from "mongoose";
+import { config } from "./config/dbconfig";
 
 require('dotenv').config()
 
@@ -13,6 +15,10 @@ var server = http.createServer(app);
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
+
+mongoose.connect(config.mongo.url, { retryWrites : true, w : "majority"})
+  .then(() => { console.log("connected to MongoDB") })
+  .catch((error) => { console.log(error) });
 
 const io = socketServer(server);
 

@@ -1,5 +1,6 @@
 import { SocketController, SocketIO, OnMessage, MessageBody, ConnectedSocket } from "socket-controllers"; 
 import { Server, Socket } from "socket.io";
+import { deleteRoomToGame } from "./roomToGameDBController";
 
 @SocketController()
 export class GameController {
@@ -13,7 +14,7 @@ export class GameController {
     public async readyUp(@SocketIO() io: Server, @ConnectedSocket() socket: Socket, @MessageBody() message: any) {
         const gameRoom = this.getSocketGameRoom(socket);
         //socket.to(gameRoom).emit("ready_up_response", { sid : socket.id });
-        
+        deleteRoomToGame(gameRoom);
         socket.emit("ready_up_response", { state : true })
     }
     @OnMessage("update_game")
