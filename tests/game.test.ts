@@ -114,14 +114,46 @@ describe('board', () => {
 
     it("can swap pieces", () => {
         const testBoard = new JunqiBoard();
+
         expect(testBoard.isLegalSwap(new Position(6, 0), new Position(6, 1))).toBe(true);
+        testBoard.swap(new Position(6, 0), new Position(6, 1));
+        expect(testBoard.getPieceAt(new Position(6, 0))).toStrictEqual(new Piece(Rank.General, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(6, 1))).toStrictEqual(new Piece(Rank.Captain, Side.Blue));
+
         expect(testBoard.isLegalSwap(new Position(6, 0), new Position(6, 2))).toBe(true);
+        testBoard.swap(new Position(6, 0), new Position(6, 2));
+        expect(testBoard.getPieceAt(new Position(6, 0))).toStrictEqual(new Piece(Rank.Captain, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(6, 2))).toStrictEqual(new Piece(Rank.General, Side.Blue));
+
         expect(testBoard.isLegalSwap(new Position(6, 0), new Position(8, 4))).toBe(true);
+        testBoard.swap(new Position(6, 0), new Position(8, 4));
+        expect(testBoard.getPieceAt(new Position(6, 0))).toStrictEqual(new Piece(Rank.Lieutenant, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(8, 4))).toStrictEqual(new Piece(Rank.Captain, Side.Blue));
+
         expect(testBoard.isLegalSwap(new Position(10, 1), new Position(10, 0))).toBe(true);
+        testBoard.swap(new Position(10, 1), new Position(10, 0));
+        expect(testBoard.getPieceAt(new Position(10, 1))).toStrictEqual(new Piece(Rank.Engineer, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(10, 0))).toStrictEqual(new Piece(Rank.Landmine, Side.Blue));
+
         expect(testBoard.isLegalSwap(new Position(11, 3), new Position(9, 0))).toBe(true);
+        testBoard.swap(new Position(11, 3), new Position(9, 0));
+        expect(testBoard.getPieceAt(new Position(11, 3))).toStrictEqual(new Piece(Rank.Major, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(9, 0))).toStrictEqual(new Piece(Rank.Bomb, Side.Blue));
+
         expect(testBoard.isLegalSwap(new Position(9, 0), new Position(11, 3))).toBe(true);
+        testBoard.swap(new Position(9, 0), new Position(11, 3));
+        expect(testBoard.getPieceAt(new Position(11, 3))).toStrictEqual(new Piece(Rank.Bomb, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(9, 0))).toStrictEqual(new Piece(Rank.Major, Side.Blue));
+
         expect(testBoard.isLegalSwap(new Position(11, 3), new Position(11, 4))).toBe(true);
+        testBoard.swap(new Position(11, 3), new Position(11, 4));
+        expect(testBoard.getPieceAt(new Position(11, 3))).toStrictEqual(new Piece(Rank.Major, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(11, 4))).toStrictEqual(new Piece(Rank.Bomb, Side.Blue));
+
         expect(testBoard.isLegalSwap(new Position(11, 3), new Position(10, 4))).toBe(true);
+        testBoard.swap(new Position(11, 3), new Position(10, 4));
+        expect(testBoard.getPieceAt(new Position(11, 3))).toStrictEqual(new Piece(Rank.Engineer, Side.Blue));
+        expect(testBoard.getPieceAt(new Position(10, 4))).toStrictEqual(new Piece(Rank.Major, Side.Blue));
     })
 
 })

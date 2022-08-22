@@ -5,14 +5,20 @@ export class Tile implements ITile {
     piece: IPiece;
     tileType: TileType;
 
-    railRoadNeighbors: Tile[];
-    roadNeighbors: Tile[];
+    railroadNeighbors: ITile[];
+    roadNeighbors: ITile[];
     
     constructor(piece: IPiece, tileType: TileType){
         this.piece = piece;
         this.tileType = tileType;
-        this.railRoadNeighbors = [];
+        this.railroadNeighbors = [];
         this.roadNeighbors = [];
+    }
+    getRoadNeighbors(): ITile [] {
+        return this.roadNeighbors;
+    }
+    getRailroadNeighbors(): ITile [] {
+        return this.railroadNeighbors;
     }
 
     setPiece(piece: IPiece): void {
@@ -27,12 +33,17 @@ export class Tile implements ITile {
         return this.piece;
     }
 
-    setRailRoadNeighbors(neighbors: Tile[]): void{
-        this.railRoadNeighbors = neighbors;
+    setRailroadNeighbors(neighbors: Tile[]): void{
+        this.railroadNeighbors = neighbors;
     }
 
     setRoadNeighbors(neighbors: Tile[]): void{
         this.roadNeighbors = neighbors;
+    }
+
+    setNeighbors(n1: ITile[], n2: ITile[]){
+        this.roadNeighbors = n1;
+        this.railroadNeighbors = n2;
     }
     
 }
