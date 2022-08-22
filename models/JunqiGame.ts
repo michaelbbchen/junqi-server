@@ -21,7 +21,7 @@ export class JunqiGame implements IJunqiGame {
         throw new Error("Method not implemented.");
     }
 
-    swap(pos1: Position, pos2: Position): void {
+    swap(pos1: Position, pos2: Position): boolean {
         throw new Error("Method not implemented.");
     }
 
