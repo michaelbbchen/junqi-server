@@ -15,7 +15,7 @@ export class JunqiBoard implements IBoard {
     board: ITile[][];
 
     constructor(boardString: string = ""){
-        if(!boardString) this.board = this.defineNewBoard("38373 6?5?6 27?92 4?2?5 1LL11 BFLB4 BFLB4 1LL11 2?2?5 27?92 6?5?6 38373");
+        if(!boardString) this.board = this.defineNewBoard("BFLB4 1LLL1 4?2?5 27?72 6?5?6 38393 38393 6?5?6 27?72 4?2?5 1LLL1 BFLB4");
         else {
             // TODO: initalize board based on what the boardString says
             this.board = this.defineNewBoard(boardString);
