@@ -52,7 +52,7 @@ export class RoomController {
             if(connectedSockets?.size === 2) {
                 console.log("Starting game in room", message.roomId);
                 
-                createJunqiGame(message.roomId);
+                createJunqiGame(message.roomId, connectedSockets);
 
                 io.to(message.roomId).emit("start_game", {
                     start: true,
