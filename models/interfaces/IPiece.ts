@@ -1,4 +1,5 @@
 import { Side } from "./IJunqiGame";
+import { Schema } from "mongoose";
 
 export interface IPiece {
     rank: Rank;
@@ -23,3 +24,7 @@ export enum Rank{
     Bomb=11
 }
 
+export const IPieceSchema : Schema = new Schema({
+    rank : { type : Number, required : true },
+    player : { type : Number, required : true }
+});

@@ -1,10 +1,17 @@
 import { TileType } from "../Tile";
-import { IPiece } from "./IPiece";
+import { IPiece, IPieceSchema } from "./IPiece";
+import { Schema } from "mongoose";
 
 export interface ITile {
     piece: IPiece;
+    tileType: TileType;
     setPiece(piece: IPiece): void;
     getPiece(): IPiece;
 
     getTileType(): TileType;
 }
+
+export const ITileSchema : Schema = new Schema({
+    piece: { type: IPieceSchema, required: true },
+    tileType: { type: Number, required: true, immutable: true }
+})

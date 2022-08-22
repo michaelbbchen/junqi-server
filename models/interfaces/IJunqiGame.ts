@@ -1,6 +1,6 @@
 import { Piece } from "../Piece";
 import { Position } from "../Position";
-import { IBoard } from "./IBoard";
+import { IBoard, IBoardSchema } from "./IBoard";
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface IJunqiGame{
@@ -22,7 +22,7 @@ export interface IJunqiGameModel extends IJunqiGame, Document {}
 
 export const IJunqiGameSchema : Schema = new Schema({
     name: { type : String, required : true},
-    board: { type : Object, required : true},
+    board: { type : IBoardSchema, required : true},
     turn: { type : Number, required: true},
     started : { type : Boolean, required : true},
     ready : { type : Map, required : true }

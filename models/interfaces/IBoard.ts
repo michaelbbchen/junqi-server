@@ -1,6 +1,7 @@
 import { IPiece } from "./IPiece";
-import { ITile } from "./ITile";
+import { ITile, ITileSchema } from "./ITile";
 import { Position } from "../Position";
+import { Schema } from "mongoose";
 
 export interface IBoard{
     board: ITile[][];
@@ -17,3 +18,7 @@ export interface IBoard{
     hasPiece(pos1: Position): boolean;
     isGameOver(): boolean;
 }
+
+export const IBoardSchema : Schema = new Schema({
+    board: { type: [[ITileSchema]], required : true}
+})
