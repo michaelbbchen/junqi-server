@@ -10,6 +10,8 @@ describe('board', () => {
         new JunqiBoard();
     });
 
+    // TODO: make a beforeAll thing to initalize testboard instead
+
     it('initally has pieces in the correct places', () => {
         const testBoard = new JunqiBoard();
         expect(testBoard.getPieceAt(new Position(1, 1))).toStrictEqual(new Piece(Rank.Landmine, Side.Red));
@@ -58,6 +60,18 @@ describe('board', () => {
         expect(testBoard.getPieceAt(new Position(3, 4))).toStrictEqual(new Piece(Rank.Bomb, Side.Red));
     })
 
+    it("cannot swap opposing side pieces", () => {
+        const testBoard = new JunqiBoard();
+        expect(testBoard.getPieceAt(new Position(3, 4))).toStrictEqual(new Piece(Rank.Lieutenant, Side.Red));
+        expect(testBoard.getPieceAt(new Position(6, 4))).toStrictEqual(new Piece(Rank.Captain, Side.Blue));
+        expect(testBoard.isLegalSwap(new Position(3, 4), new Position(6, 4))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(6, 4), new Position(3, 4))).toBe(false);
+        expect(testBoard.isLegalSwap(new Position(1, 1), new Position(6, 4))).toBe(false);
+        expect(testBoard.getPieceAt(new Position(1, 0))).toStrictEqual(new Piece(Rank.Engineer, Side.Red));
+        expect(testBoard.getPieceAt(new Position(10, 4))).toStrictEqual(new Piece(Rank.Engineer, Side.Blue));
+        expect(testBoard.isLegalSwap(new Position(1, 0), new Position(10, 4))).toBe(false);
+    });
+
     it("cannot swap landmines past second row", () => {
         const testBoard = new JunqiBoard();
         expect(testBoard.getPieceAt(new Position(3, 4))).toStrictEqual(new Piece(Rank.Lieutenant, Side.Red));
@@ -104,6 +118,10 @@ describe('board', () => {
         expect(testBoard.isLegalSwap(new Position(6, 0), new Position(6, 2))).toBe(true);
         expect(testBoard.isLegalSwap(new Position(6, 0), new Position(8, 4))).toBe(true);
         expect(testBoard.isLegalSwap(new Position(10, 1), new Position(10, 0))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(11, 3), new Position(9, 0))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(9, 0), new Position(11, 3))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(11, 3), new Position(11, 4))).toBe(true);
+        expect(testBoard.isLegalSwap(new Position(11, 3), new Position(10, 4))).toBe(true);
     })
 
 })
