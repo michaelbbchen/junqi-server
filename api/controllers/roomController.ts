@@ -1,5 +1,7 @@
 import { SocketController, SocketIO, OnMessage, MessageBody, ConnectedSocket } from "socket-controllers"; 
 import { Server, Socket } from "socket.io";
+import { Gateway } from "../../models/gateway";
+import { createRoomToGame } from "./roomToGameDBController";
  
 @SocketController()
 export class RoomController {
@@ -40,6 +42,10 @@ export class RoomController {
                     result: "success",
                     reason: "Successfully joined room"
             });
+
+            //Gateway.AddPlayerToRoom(socket.id, message.roomId);
+            createRoomToGame(message.roomId, message.roomId);
+
             console.log(`Socket (${socket.id}) joined room (${message.roomId})`)
             const connectedSockets = io.sockets.adapter.rooms.get(message.roomId);
             if(connectedSockets?.size === 2) {
