@@ -10,10 +10,10 @@ export interface IBoard{
     getPieceAt(pos: Position): IPiece;
 
     isLegalMove(pos1: Position, pos2: Position): boolean;
-    makeMove(pos1: Position, pos2: Position): void;
+    makeMove(pos1: Position, pos2: Position): boolean;
 
     isLegalSwap(pos1: Position, pos2: Position): boolean;
-    swap(pos1: Position, pos2: Position): void;
+    swap(pos1: Position, pos2: Position): boolean;
 
     hasPiece(pos1: Position): boolean;
     isGameOver(): boolean;
