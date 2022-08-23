@@ -10,16 +10,25 @@ import { ITile } from "./interfaces/ITile";
 import { Piece} from "./Piece";
 import { Position } from "./Position";
 import { Tile, TileType } from "./Tile";
+import { Queue } from 'queue-typescript';
 
 export class JunqiBoard implements IBoard {
     board: ITile[][];
+    winner: Side;
+    revealFlagArr: boolean [];
 
     constructor(boardString: string = ""){
+        this.winner = Side.Neither;
+        this.revealFlagArr = [false, false];
+
         if(!boardString) this.board = this.defineNewBoard("BFLB4 1LLL1 4?2?5 27?72 6?5?6 38393 38393 6?5?6 27?72 4?2?5 1LLL1 BFLB4");
         else {
             // TODO: initalize board based on what the boardString says
             this.board = this.defineNewBoard(boardString);
         }
+    }
+    revealFlags(): boolean[] {
+        return this.revealFlagArr;
     }
 
     isLegalSwap(pos1: Position, pos2: Position): boolean {
@@ -103,26 +112,122 @@ export class JunqiBoard implements IBoard {
     isLegalMove(pos1: Position, pos2: Position): boolean {
         if(!this.validPosition(pos1)) return  false;
         if(!this.validPosition(pos2)) return false;
-
-        let pieceMoved = this.getPieceAt(pos1);
-
-        if(pieceMoved.rank === Rank.Empty) return false;
-        if(pieceMoved.rank === Rank.Flag) return false;
-        if(pieceMoved.rank === Rank.Landmine) return false;
-
-        if(pieceMoved.player === Side.Blue && this.getPieceAt(pos2).player === Side.Blue) return false;
-        if(pieceMoved.player === Side.Red && this.getPieceAt(pos2).player === Side.Red) return false;
-
+        if(pos1.row === pos2.row && pos1.col === pos2.col) return false;
 
         let startingTile = this.board[pos1.row][pos1.col];
+        let endingTile = this.board[pos2.row][pos2.col];
+
+        let piece1 = this.getPieceAt(pos1);
+        let piece2 = this.getPieceAt(pos2);
+
+
+        if(piece1.rank === Rank.Empty) return false;
+        if(piece1.rank === Rank.Flag) return false;
+        if(piece1.rank === Rank.Landmine) return false;
+
+
+        if(piece1.player === piece2.player) return false;
+
+        if(startingTile.tileType === TileType.HQ) return false;
+        if(endingTile.tileType === TileType.Campsite && piece2) return false;
 
 
 
-        if(pieceMoved.rank === Rank.Engineer){
+        if (piece1.rank === Rank.Engineer) {
+
+            let visited: Set<ITile> = new Set<ITile>();
+            let queue = new Queue<ITile>();
+
+            queue.enqueue(startingTile);
+
+            while (queue.length !== 0) {
+
+                let tile = queue.dequeue();
+                
+                if(visited.has(tile)) continue;
+                if(tile == endingTile) return true;
+                visited.add(tile);
+                if(tile.hasPiece()) continue;
+
+                let railroadNeighbors = tile.getRailroadNeighbors();
+
+                railroadNeighbors.forEach(function (neighbor){
+                    queue.enqueue(tile);
+                })
+
+            }
 
         } else {
-            
-            let startingTile = this.board[pos1.row][pos1.col];
+
+            let roadNeighbors = startingTile.getRoadNeighbors();
+            for(let i = 0; i < roadNeighbors.length; i ++){
+                if(roadNeighbors[i] == endingTile){
+                    return true;
+                }
+            }
+
+            if(pos1.row === 5 && pos1.col === 2 && pos2.row === 6 && pos2.col === 2) return true;
+            if(pos1.row === 6 && pos1.col === 2 && pos2.row === 5 && pos2.col === 2) return true;
+
+
+
+
+            if( (pos1.row === pos2.row) && (pos1.row === 0 || pos1.row === 5 || pos1.row === 6 || pos1.row === 10) ){
+                
+                if(pos1.col < pos2.col){
+                    let col = pos1.col + 1;
+                    while(col < pos2.col){
+                        if (this.hasPiece(new Position(pos1.row, col))) {
+                            return false;
+                        }
+                        col++;
+                    }
+
+                    return true;
+
+                } else {
+
+                    let col = pos1.col - 1;
+                    while(col > pos2.col){
+                        if (this.hasPiece(new Position(pos1.row, col))) {
+                            return false;
+                        }
+                        col--;
+                    }
+
+                    return true;
+                }
+
+            } else if ((pos1.col === pos2.col) && (pos1.col === 0 || pos1.col === 4)) {
+
+                if(pos1.row < pos2.row){
+                    let row = pos1.row + 1;
+                    while(row < pos2.row){
+                        if (this.hasPiece(new Position(row, pos1.col))) {
+                            return false;
+                        }
+                        row++;
+                    }
+
+                    return true;
+
+                } else {
+
+                    let row = pos1.col - 1;
+                    while(row > pos2.row){
+                        if (this.hasPiece(new Position(row, pos1.col))) {
+                            return false;
+                        }
+                        row--;
+                    }
+
+                    return true;
+                }
+
+            } else {
+                return false;
+            }
+
 
         }
 
@@ -133,12 +238,73 @@ export class JunqiBoard implements IBoard {
 
     makeMove(pos1: Position, pos2: Position): boolean {
         if(!this.isLegalMove(pos1, pos2)) return false;
-        
 
         if(!this.hasPiece(pos2)){
-            this.swap(pos1, pos2);
+            this.swap(pos1, pos2);  
+            return true;   
+        }  
             
-        } 
+        let piece1 = this.getPieceAt(pos1);
+        let piece2 = this.getPieceAt(pos2);
+
+        this.setPieceAt(pos1, new Piece(Rank.Empty, Side.Neither));
+        
+
+
+        if(piece2.rank === Rank.Flag){
+            if(piece2.player ===  Side.Blue){
+                this.winner = Side.Red;
+            } else {
+                this.winner = Side.Blue;
+            }
+            this.setPieceAt(pos2, new Piece(Rank.Empty, Side.Neither));
+        
+        } else if(piece1.rank === Rank.Bomb || piece2.rank === Rank.Bomb){
+            
+            if(piece1.rank === Rank.FieldMarshal){
+                if(piece1.player === Side.Blue){
+                    this.revealFlagArr[0] = true;
+                } else if (piece1.player === Side.Red){
+                    this.revealFlagArr[1] = true;
+                }
+            } else if (piece2.rank === Rank.FieldMarshal){
+                if(piece2.player === Side.Blue){
+                    this.revealFlagArr[0] = true;
+                } else if (piece2.player === Side.Red){
+                    this.revealFlagArr[1] = true;
+                }  
+            }
+
+            this.setPieceAt(pos2, new Piece(Rank.Empty, Side.Neither));
+
+
+        } else if(piece2.rank === Rank.Landmine) {
+
+            if(piece1.rank === Rank.Engineer) {
+                this.setPieceAt(pos2, piece1);
+            } else if (piece1.rank = Rank.FieldMarshal){
+                if(piece1.player === Side.Blue){
+                    this.revealFlagArr[0] = true;
+                } else if (piece1.player === Side.Red){
+                    this.revealFlagArr[1] = true;
+                }
+            }
+
+        } else {
+
+            if(piece1.rank > piece2.rank) {
+                this.setPieceAt(pos2, piece1);
+            } else if (piece1.rank === piece2.rank){
+                if(piece1.rank === Rank.FieldMarshal) {
+                    this.revealFlagArr[0] = true;
+                    this.revealFlagArr[1] = true;
+                }
+
+                this.setPieceAt(pos2, new Piece(Rank.Empty, Side.Neither));
+
+            }
+
+        }
 
         return true;
 
@@ -161,16 +327,9 @@ export class JunqiBoard implements IBoard {
         return this.getPieceAt(pos1).rank >= 0
     }
 
-    isGameOver(): boolean {
-        throw new Error("Method not implemented.");
+    hasWinner(): Side {
+        return this.winner;
     }
-    
-    testMethod(){
-        // let temp = this.board[0][1].getRoad;
-
-    }
-
-
 
     private defineNewBoard(pieces: String): ITile[][] {
 

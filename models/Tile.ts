@@ -14,6 +14,9 @@ export class Tile implements ITile {
         this.railroadNeighbors = [];
         this.roadNeighbors = [];
     }
+    hasPiece(): boolean {
+        return this.getPiece().rank !== -1;
+    }
     getRoadNeighbors(): ITile [] {
         return this.roadNeighbors;
     }
@@ -33,11 +36,11 @@ export class Tile implements ITile {
         return this.piece;
     }
 
-    setRailroadNeighbors(neighbors: Tile[]): void{
+    setRailroadNeighbors(neighbors: ITile[]): void{
         this.railroadNeighbors = neighbors;
     }
 
-    setRoadNeighbors(neighbors: Tile[]): void{
+    setRoadNeighbors(neighbors: ITile[]): void{
         this.roadNeighbors = neighbors;
     }
 
