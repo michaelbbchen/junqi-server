@@ -7,6 +7,7 @@ export interface ITile {
     tileType: TileType;
     setPiece(piece: IPiece): void;
     getPiece(): IPiece;
+    hasPiece(): boolean;
     getRoadNeighbors(): ITile [];
     getRailroadNeighbors(): ITile [];
     

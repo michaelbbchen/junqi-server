@@ -2,9 +2,12 @@ import { IPiece } from "./IPiece";
 import { ITile, ITileSchema } from "./ITile";
 import { Position } from "../Position";
 import { Schema } from "mongoose";
+import { Side } from "./IJunqiGame";
 
 export interface IBoard{
     board: ITile[][];
+    winner: Side;
+    revealFlagArr: boolean [];
 
     setPieceAt(pos: Position, piece: IPiece): void;
     getPieceAt(pos: Position): IPiece;
@@ -16,7 +19,8 @@ export interface IBoard{
     swap(pos1: Position, pos2: Position): boolean;
 
     hasPiece(pos1: Position): boolean;
-    isGameOver(): boolean;
+    hasWinner(): Side;
+    revealFlags(): boolean [];
 }
 
 export const IBoardSchema : Schema = new Schema({
