@@ -158,13 +158,83 @@ describe('board', () => {
 
     it("correctly determines engineer moves", ()=>{
         const testBoard = new JunqiBoard("????? ?1??? 2222? ?222? ????? ????? ??3?? ????? ????? ????? ????? ?????");
-        //expect(testBoard.isLegalMove(new Position(1,1), new Position(6,2))).toBe(true);
+        expect(testBoard.isLegalMove(new Position(1,1), new Position(6,2))).toBe(true);
         const testBoard2 = new JunqiBoard("????? ?1??? 22222 ?222? ????? ????? ??3?? ????? ????? ????? ????? ?????");
-        //expect(testBoard2.isLegalMove(new Position(1,1), new Position(6,2))).toBe(false);
+        expect(testBoard2.isLegalMove(new Position(1,1), new Position(6,2))).toBe(false);
         const testBoard3 = new JunqiBoard("????? ??2?? ??1?? ?222? ????? ????? ??3?? ????? ????? ????? ????? ?????");
         testBoard3.setPieceAt(new Position(1,2), new Piece(Rank.Colonel, Side.Blue));
         expect(testBoard3.isLegalMove(new Position(2,2), new Position(1,2))).toBe(true);
 
 
     })
+
+    it("non engineer railroad paths work", ()=>{
+        const testBoard = new JunqiBoard("????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ?????");
+        testBoard.setPieceAt(new Position(1,0), new Piece(Rank.Colonel, Side.Red));
+        testBoard.setPieceAt(new Position(7,0), new Piece(Rank.Colonel, Side.Blue));
+        expect(testBoard.isLegalMove(new Position(1,0), new Position(7,0))).toBe(true);
+        testBoard.setPieceAt(new Position(5,0), new Piece(Rank.Colonel, Side.Blue));
+        expect(testBoard.isLegalMove(new Position(1,0), new Position(5,0))).toBe(true);
+        expect(testBoard.isLegalMove(new Position(1,0), new Position(7,0))).toBe(false);
+        testBoard.setPieceAt(new Position(5,2), new Piece(Rank.Colonel, Side.Red));
+        testBoard.setPieceAt(new Position(6,2), new Piece(Rank.Colonel, Side.Blue));
+        expect(testBoard.isLegalMove(new Position(5,2), new Position(6,2))).toBe(true);
+
+        const testBoard2 = new JunqiBoard("????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ?????");
+        testBoard2.setPieceAt(new Position(1,0), new Piece(Rank.Colonel, Side.Red));
+        expect(testBoard2.makeMove(new Position(1,0), new Position(10,0))).toBe(true);
+        expect(testBoard2.makeMove(new Position(10,0), new Position(10,4))).toBe(true);
+        expect(testBoard2.makeMove(new Position(10,4), new Position(1,4))).toBe(true);
+        expect(testBoard2.makeMove(new Position(1,4), new Position(1,0))).toBe(true);
+
+        testBoard2.setPieceAt(new Position(5,0), new Piece(Rank.Colonel, Side.Red));
+        testBoard2.setPieceAt(new Position(6,0), new Piece(Rank.Colonel, Side.Red));
+
+        expect(testBoard2.makeMove(new Position(5,0), new Position(5,4))).toBe(true);
+        expect(testBoard2.makeMove(new Position(5,4), new Position(5,0))).toBe(true);
+        expect(testBoard2.makeMove(new Position(6,0), new Position(6,4))).toBe(true);
+        expect(testBoard2.makeMove(new Position(6,4), new Position(6,0))).toBe(true);
+
+        testBoard2.setPieceAt(new Position(5,2), new Piece(Rank.Colonel, Side.Red));
+        testBoard2.setPieceAt(new Position(6,2), new Piece(Rank.Colonel, Side.Red));
+
+        expect(testBoard2.makeMove(new Position(5,0), new Position(5,4))).toBe(false);
+        expect(testBoard2.makeMove(new Position(6,4), new Position(6,0))).toBe(false);
+
+
+    })
+
+    it("general move cases", ()=>{
+        const testBoard = new JunqiBoard("????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ?????");
+        testBoard.setPieceAt(new Position(0,0), new Piece(Rank.Colonel, Side.Blue));
+        testBoard.setPieceAt(new Position(1,0), new Piece(Rank.Colonel, Side.Red));
+        expect(testBoard.isLegalMove(new Position(0,0), new Position(1,0))).toBe(true);
+        testBoard.setPieceAt(new Position(7,0), new Piece(Rank.Colonel, Side.Blue));
+        testBoard.setPieceAt(new Position(5,0), new Piece(Rank.Colonel, Side.Blue));
+        expect(testBoard.isLegalMove(new Position(0,0), new Position(5,0))).toBe(false);
+        testBoard.setPieceAt(new Position(5,2), new Piece(Rank.Colonel, Side.Red));
+        testBoard.setPieceAt(new Position(6,2), new Piece(Rank.Colonel, Side.Blue));
+
+    })
+
+    it("tileType move tests", ()=>{
+        const testBoard = new JunqiBoard("????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ????? ?????");
+        testBoard.setPieceAt(new Position(0,1), new Piece(Rank.Flag, Side.Blue));
+        testBoard.setPieceAt(new Position(1,1), new Piece(Rank.Colonel, Side.Red));
+        testBoard.setPieceAt(new Position(1,0), new Piece(Rank.Colonel, Side.Blue));
+        expect(testBoard.isLegalMove(new Position(0,1), new Position(0,2))).toBe(false);
+        expect(testBoard.makeMove(new Position(1,1), new Position(2,1))).toBe(true);
+        expect(testBoard.makeMove(new Position(1,0), new Position(2,1))).toBe(false);
+
+
+
+
+
+        
+
+
+
+    })
+
+
 })
