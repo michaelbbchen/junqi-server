@@ -110,6 +110,7 @@ export class JunqiBoard implements IBoard {
     }
 
     isLegalMove(pos1: Position, pos2: Position): boolean {
+
         if(!this.validPosition(pos1)) return  false;
         if(!this.validPosition(pos2)) return false;
         if(pos1.row === pos2.row && pos1.col === pos2.col) return false;
@@ -131,14 +132,15 @@ export class JunqiBoard implements IBoard {
         if(startingTile.tileType === TileType.HQ) return false;
         if(endingTile.tileType === TileType.Campsite && piece2) return false;
 
-
-
+        console.log("fuck")
         if (piece1.rank === Rank.Engineer) {
 
             let visited: Set<ITile> = new Set<ITile>();
             let queue = new Queue<ITile>();
 
-            queue.enqueue(startingTile);
+            startingTile.getRailroadNeighbors().forEach(function(startingNeighbor){
+                queue.enqueue(startingNeighbor);
+            })
 
             while (queue.length !== 0) {
 
@@ -152,85 +154,79 @@ export class JunqiBoard implements IBoard {
                 let railroadNeighbors = tile.getRailroadNeighbors();
 
                 railroadNeighbors.forEach(function (neighbor){
-                    queue.enqueue(tile);
+                    queue.enqueue(neighbor);
                 })
 
             }
 
-        } else {
+        } 
+ 
+        console.log(startingTile.tileType);
 
-            let roadNeighbors = startingTile.getRoadNeighbors();
-            for(let i = 0; i < roadNeighbors.length; i ++){
-                if(roadNeighbors[i] == endingTile){
-                    return true;
-                }
+        let roadNeighbors = startingTile.getRoadNeighbors();
+        console.log(roadNeighbors.length);
+        for(let i = 0; i < roadNeighbors.length; i++){
+            if(roadNeighbors[i] == endingTile){
+                return true;
             }
-
-            if(pos1.row === 5 && pos1.col === 2 && pos2.row === 6 && pos2.col === 2) return true;
-            if(pos1.row === 6 && pos1.col === 2 && pos2.row === 5 && pos2.col === 2) return true;
-
-
-
-
-            if( (pos1.row === pos2.row) && (pos1.row === 0 || pos1.row === 5 || pos1.row === 6 || pos1.row === 10) ){
-                
-                if(pos1.col < pos2.col){
-                    let col = pos1.col + 1;
-                    while(col < pos2.col){
-                        if (this.hasPiece(new Position(pos1.row, col))) {
-                            return false;
-                        }
-                        col++;
-                    }
-
-                    return true;
-
-                } else {
-
-                    let col = pos1.col - 1;
-                    while(col > pos2.col){
-                        if (this.hasPiece(new Position(pos1.row, col))) {
-                            return false;
-                        }
-                        col--;
-                    }
-
-                    return true;
-                }
-
-            } else if ((pos1.col === pos2.col) && (pos1.col === 0 || pos1.col === 4)) {
-
-                if(pos1.row < pos2.row){
-                    let row = pos1.row + 1;
-                    while(row < pos2.row){
-                        if (this.hasPiece(new Position(row, pos1.col))) {
-                            return false;
-                        }
-                        row++;
-                    }
-
-                    return true;
-
-                } else {
-
-                    let row = pos1.col - 1;
-                    while(row > pos2.row){
-                        if (this.hasPiece(new Position(row, pos1.col))) {
-                            return false;
-                        }
-                        row--;
-                    }
-
-                    return true;
-                }
-
-            } else {
-                return false;
-            }
-
-
         }
 
+        if(pos1.row === 5 && pos1.col === 2 && pos2.row === 6 && pos2.col === 2) return true;
+        if(pos1.row === 6 && pos1.col === 2 && pos2.row === 5 && pos2.col === 2) return true;
+
+        if( (pos1.row === pos2.row) && (pos1.row === 0 || pos1.row === 5 || pos1.row === 6 || pos1.row === 10) ){
+            
+            if(pos1.col < pos2.col){
+                let col = pos1.col + 1;
+                while(col < pos2.col){
+                    if (this.hasPiece(new Position(pos1.row, col))) {
+                        return false;
+                    }
+                    col++;
+                }
+
+                return true;
+
+            } else {
+
+                let col = pos1.col - 1;
+                while(col > pos2.col){
+                    if (this.hasPiece(new Position(pos1.row, col))) {
+                        return false;
+                    }
+                    col--;
+                }
+
+                return true;
+            }
+
+        } else if ((pos1.col === pos2.col) && (pos1.col === 0 || pos1.col === 4)) {
+
+            if(pos1.row < pos2.row){
+                let row = pos1.row + 1;
+                while(row < pos2.row){
+                    if (this.hasPiece(new Position(row, pos1.col))) {
+                        return false;
+                    }
+                    row++;
+                }
+
+                return true;
+
+            } else {
+
+                let row = pos1.col - 1;
+                while(row > pos2.row){
+                    if (this.hasPiece(new Position(row, pos1.col))) {
+                        return false;
+                    }
+                    row--;
+                }
+
+                return true;
+            }
+
+        } 
 
         return false;
 
