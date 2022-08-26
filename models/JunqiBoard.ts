@@ -130,9 +130,8 @@ export class JunqiBoard implements IBoard {
         if(piece1.player === piece2.player) return false;
 
         if(startingTile.tileType === TileType.HQ) return false;
-        if(endingTile.tileType === TileType.Campsite && piece2) return false;
+        if(endingTile.tileType === TileType.Campsite && this.hasPiece(pos2)) return false;
 
-        console.log("fuck")
         if (piece1.rank === Rank.Engineer) {
 
             let visited: Set<ITile> = new Set<ITile>();
@@ -171,10 +170,11 @@ export class JunqiBoard implements IBoard {
             }
         }
 
+        //middle center pathway column
         if(pos1.row === 5 && pos1.col === 2 && pos2.row === 6 && pos2.col === 2) return true;
         if(pos1.row === 6 && pos1.col === 2 && pos2.row === 5 && pos2.col === 2) return true;
 
-        if( (pos1.row === pos2.row) && (pos1.row === 0 || pos1.row === 5 || pos1.row === 6 || pos1.row === 10) ){
+        if( (pos1.row === pos2.row) && (pos1.row === 1 || pos1.row === 5 || pos1.row === 6 || pos1.row === 10) ){
             
             if(pos1.col < pos2.col){
                 let col = pos1.col + 1;
