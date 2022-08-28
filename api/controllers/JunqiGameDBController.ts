@@ -16,18 +16,20 @@ const createJunqiGame = (roomName : string, connectedSockets : Set<string>) => {
         players : [],
         ready : new Map([]),
     });
-    connectedSockets.forEach((s) => jg.ready.set(s, false));
-    connectedSockets.forEach((s) => jg.players.push(s));
+    connectedSockets.forEach((s) => {
+        jg.players.push(s);
+        jg.ready.set(s, false)
+    });
 
     return jg.save();
 };
 
 const hasJunqiGame = (gameName : string) => {
     console.log(JunqiGame.exists({name : gameName}));
-    return JunqiGame.exists({name : gameName});
+    return JunqiGame.exists({name : gameName}) != null;
 }
 const updateJunqiGame = async (board : IBoard, gameName : string) => {
-    if (await JunqiGame.exists({ name : gameName})) {
+    if (hasJunqiGame(gameName)) {
         console.log(`Updating game ${gameName}`);
         JunqiGame.updateOne({name : gameName}, { board : board });
     } else {
@@ -37,7 +39,7 @@ const updateJunqiGame = async (board : IBoard, gameName : string) => {
 }
 
 const setReadyJunqiGame = async (playerName : string, gameName : string, state : boolean) => {
-    if (await JunqiGame.exists({ name : gameName})) {
+    if (hasJunqiGame(gameName)) {
         console.log(`Readying player: ${playerName} in JunqiGame: ${gameName}`);
         const game = await JunqiGame.find({ name : gameName });
         if (game[0].players.includes(playerName)){
@@ -50,7 +52,7 @@ const setReadyJunqiGame = async (playerName : string, gameName : string, state :
 }
 
 const startJunqiGame = async (gameName : string) => {
-    if (await JunqiGame.exists({ name : gameName})) {
+    if (hasJunqiGame(gameName)) {
         console.log(`Starting JunqiGame: ${gameName}`);
         const game = await JunqiGame.find({ name : gameName });
         
@@ -62,7 +64,7 @@ const startJunqiGame = async (gameName : string) => {
 }
 
 const addPlayerToJunqiGame = async (playerName : string, gameName : string) => {
-    if (await JunqiGame.exists({ name : gameName})) {
+    if (hasJunqiGame(gameName)) {
         console.log(`Starting JunqiGame: ${gameName}`);
         const game = await JunqiGame.find({ name : gameName });
         for (let i = 0; i < 2; i++) {
