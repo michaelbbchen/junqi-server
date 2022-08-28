@@ -51,7 +51,6 @@ export class RoomController {
             console.log(`Socket (${socket.id}) joined room (${message.roomId})`)
             const connectedSockets = io.sockets.adapter.rooms.get(message.roomId);
             if(connectedSockets?.size === 2) {
-                console.log("D: ", !hasJunqiGame(message.roomId));
                 if(!hasJunqiGame(message.roomId)){
                     console.log("Starting game in room", message.roomId);
                     createJunqiGame(message.roomId, connectedSockets).then(() => {
