@@ -6,7 +6,7 @@ import { JunqiBoard } from "../../models/JunqiBoard";
 const createJunqiGame = (roomName : string, connectedSockets : Set<string>) => {
     console.log(`Creating JunqiGame: ${roomName} in db`);
 
-    const jb = new JunqiBoard(roomName);
+    const jb = new JunqiBoard();
 
     const jg = new JunqiGame({
         name : roomName,
@@ -22,6 +22,10 @@ const createJunqiGame = (roomName : string, connectedSockets : Set<string>) => {
     return jg.save();
 };
 
+const hasJunqiGame = (gameName : string) => {
+    console.log(JunqiGame.exists({name : gameName}));
+    return JunqiGame.exists({name : gameName});
+}
 const updateJunqiGame = async (board : IBoard, gameName : string) => {
     if (await JunqiGame.exists({ name : gameName})) {
         console.log(`Updating game ${gameName}`);
@@ -90,7 +94,7 @@ const deletePlayerFromJunqiGame = async (playerName : string) => {
         var ind = game[0].players.indexOf(playerName);
         if (ind !== -1) {
             game[0].players[ind] = "";
-            game[0].save();
+            await game[0].save();
         }
         if (game[0].players[0] === "" && game[0].players[1] === ""){
             deleteJunqiGame(game[0].name);
@@ -106,7 +110,7 @@ const deletePlayerFromJunqiGame = async (playerName : string) => {
 
 const deleteJunqiGame = async (gameName : string) => {
     console.log(`Deleting JunqiGame ${gameName} in db`);
-    return JunqiGame.deleteMany({ name: gameName });
+    return JunqiGame.deleteOne({ name: gameName });
 };
 
-export { createJunqiGame, setReadyJunqiGame, addPlayerToJunqiGame, startJunqiGame, updateJunqiGame, deletePlayerFromJunqiGame, deleteJunqiGame };
+export { createJunqiGame, setReadyJunqiGame, hasJunqiGame, addPlayerToJunqiGame, startJunqiGame, updateJunqiGame, deletePlayerFromJunqiGame, deleteJunqiGame };
