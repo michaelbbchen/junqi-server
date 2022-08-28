@@ -33,7 +33,7 @@ const hasJunqiGame = (gameName: string) : boolean => {
         .catch((err) => {
             console.log(err);
         });
-    return false;
+    return true;
 }
 const updateJunqiGame = async (board: IBoard, gameName: string) => {
     if (hasJunqiGame(gameName)) {
@@ -97,6 +97,10 @@ const deletePlayerFromJunqiGame = async (playerName: string) => {
     try {
         console.log(`Deleting player ${playerName} from JunqiGame`);
         const game = await JunqiGame.find({ players: playerName });
+
+        if(game.length == 0) {
+            console.log("Player (somehow) left game that does not exist.")
+        }
         /*
         for (let i = 0; i < 2; i++) {
             if (game[0].players[i] === playerName) {
