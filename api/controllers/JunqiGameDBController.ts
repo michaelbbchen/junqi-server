@@ -4,7 +4,7 @@ import JunqiGame from "../../models/interfaces/IJunqiGame";
 import { JunqiBoard } from "../../models/JunqiBoard";
 
 const createJunqiGame = (roomName: string, connectedSockets: Set<string>) => {
-    console.log(`Creating JunqiGame: ${roomName} in db`);
+    console.log(`Creating JunqiGame: ${roomName}`);
 
     const jb = new JunqiBoard();
 
@@ -24,19 +24,19 @@ const createJunqiGame = (roomName: string, connectedSockets: Set<string>) => {
     return jg.save();
 };
 
-const hasJunqiGame = (gameName: string) : boolean => {
-    JunqiGame.exists({ name: gameName })
-        .then((res) => {
-            console.log(res)
-            return res != null;
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-    return true;
+const hasJunqiGame = async (gameName: string): Promise<boolean> => {
+    return new Promise<boolean>((rs, rj) => {
+        JunqiGame.exists({ name: gameName }).exec()
+            .then((res: any) => {
+                rs(res != null);
+            })
+            .catch((err: string) => {
+                rj("Could not check if game exists in database: " + err);
+            })
+    });
 }
 const updateJunqiGame = async (board: IBoard, gameName: string) => {
-    if (hasJunqiGame(gameName)) {
+    if (await hasJunqiGame(gameName)) {
         console.log(`Updating game ${gameName}`);
         JunqiGame.updateOne({ name: gameName }, { board: board });
     } else {
@@ -46,7 +46,7 @@ const updateJunqiGame = async (board: IBoard, gameName: string) => {
 }
 
 const setReadyJunqiGame = async (playerName: string, gameName: string, state: boolean) => {
-    if (hasJunqiGame(gameName)) {
+    if (await hasJunqiGame(gameName)) {
         console.log(`Readying player: ${playerName} in JunqiGame: ${gameName}`);
         const game = await JunqiGame.find({ name: gameName });
         if (game[0].players.includes(playerName)) {
@@ -59,7 +59,7 @@ const setReadyJunqiGame = async (playerName: string, gameName: string, state: bo
 }
 
 const startJunqiGame = async (gameName: string) => {
-    if (hasJunqiGame(gameName)) {
+    if (await hasJunqiGame(gameName)) {
         console.log(`Starting JunqiGame: ${gameName}`);
         const game = await JunqiGame.find({ name: gameName });
 
@@ -71,7 +71,7 @@ const startJunqiGame = async (gameName: string) => {
 }
 
 const addPlayerToJunqiGame = async (playerName: string, gameName: string) => {
-    if (hasJunqiGame(gameName)) {
+    if (await hasJunqiGame(gameName)) {
         console.log(`Starting JunqiGame: ${gameName}`);
         JunqiGame.find({ name: gameName }).exec()
             .then((games) => {
@@ -98,7 +98,7 @@ const deletePlayerFromJunqiGame = async (playerName: string) => {
         console.log(`Deleting player ${playerName} from JunqiGame`);
         const game = await JunqiGame.find({ players: playerName });
 
-        if(game.length == 0) {
+        if (game.length == 0) {
             console.log("Player (somehow) left game that does not exist.")
         }
         /*
