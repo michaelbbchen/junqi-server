@@ -100,6 +100,7 @@ const deletePlayerFromJunqiGame = async (playerName: string) => {
 
         if (game.length == 0) {
             console.log("Player (somehow) left game that does not exist.")
+            return;
         }
         /*
         for (let i = 0; i < 2; i++) {
