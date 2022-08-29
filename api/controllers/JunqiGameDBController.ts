@@ -52,7 +52,18 @@ const setReadyJunqiGame = async (playerName: string, gameName: string, state: bo
         if (game[0].players.includes(playerName)) {
             game[0].ready.set(playerName, state);
         }
-        game[0].save();
+
+        let allReady : boolean = true;
+        for (let [key, val] of game[0].ready) {
+            allReady &&= val;
+        }
+        await game[0].save();
+
+        if(game[0].ready.size == 2 && allReady) {
+            console.log(`Sending all ready signal to room ${gameName}`);
+            return true;
+        }
+        return false;
     } else {
         console.log(`Game ${gameName} does not exist`)
     }
@@ -64,7 +75,7 @@ const startJunqiGame = async (gameName: string) => {
         const game = await JunqiGame.find({ name: gameName });
 
         game[0].started = true;
-        game[0].save();
+        await game[0].save();
     } else {
         console.log(`Game ${gameName} does not exist`);
     }
@@ -74,15 +85,15 @@ const addPlayerToJunqiGame = async (playerName: string, gameName: string) => {
     if (await hasJunqiGame(gameName)) {
         console.log(`Starting JunqiGame: ${gameName}`);
         JunqiGame.find({ name: gameName }).exec()
-            .then((games) => {
+            .then(async (games) => {
                 for (let i = 0; i < 2; i++) {
                     if (games[0].players[i] === "") {
                         games[0].players[i] = playerName;
-                        games[0].save();
+                        games[0].ready.set(playerName, false);
+                        await games[0].save();
                         return;
                     }
                 }
-                console.log(`Game ${gameName} is full`);
             })
             .catch((err) => {
                 console.log(err)
@@ -113,10 +124,11 @@ const deletePlayerFromJunqiGame = async (playerName: string) => {
         var ind = game[0].players.indexOf(playerName);
         if (ind !== -1) {
             game[0].players[ind] = "";
+            game[0].ready.delete(playerName);
             await game[0].save();
         }
         if (game[0].players[0] === "" && game[0].players[1] === "") {
-            deleteJunqiGame(game[0].name);
+            await deleteJunqiGame(game[0].name);
         }
         //console.log(game);
 

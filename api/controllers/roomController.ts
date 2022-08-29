@@ -1,9 +1,7 @@
 import { SocketController, SocketIO, OnMessage, MessageBody, ConnectedSocket } from "socket-controllers"; 
 import { Server, Socket } from "socket.io";
 import { Gateway } from "../../models/gateway";
-import { createRoomToGame } from "./roomToGameDBController";
 import { createJunqiGame, hasJunqiGame, addPlayerToJunqiGame } from "./JunqiGameDBController";
-import { Hash } from "crypto";
 
 @SocketController()
 export class RoomController {
