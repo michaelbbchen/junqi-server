@@ -19,7 +19,7 @@ export class GameController {
         setReadyJunqiGame(socket.id, gameRoom, true).then((allReady) => {
             socket.emit("ready_up_response", { state : true })
             if(allReady) {
-                socket.to(gameRoom).emit("room_state_changed", {
+                io.to(gameRoom).emit("room_state_changed", {
                     state: "play"
                 })
             }
@@ -27,8 +27,8 @@ export class GameController {
         .catch((err) => {
             console.log(`"Failed to set ready-up: ${err}`)
         })
-        
     }
+
     @OnMessage("update_game")
     public async updateGame(@SocketIO() io: Server, @ConnectedSocket() socket: Socket, @MessageBody() message: any) {
         const gameRoom = this.getSocketGameRoom(socket);
