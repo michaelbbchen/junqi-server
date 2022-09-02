@@ -1,8 +1,3 @@
-import { PipelineTopicExpression } from "@babel/types";
-import { exit } from "process";
-import internal from "stream";
-import { runInThisContext } from "vm";
-import { threadId } from "worker_threads";
 import { IBoard } from "./interfaces/IBoard";
 import { Side } from "./interfaces/IJunqiGame";
 import { IPiece, Rank } from "./interfaces/IPiece";
@@ -15,20 +10,28 @@ import { Queue } from 'queue-typescript';
 export class JunqiBoard implements IBoard {
     board: ITile[][];
     winner: Side;
-    revealFlagArr: boolean [];
+    revealedFlags: Map<Side, boolean>;
 
     constructor(boardString: string = ""){
         this.winner = Side.Neither;
-        this.revealFlagArr = [false, false];
+        this.revealedFlags = new Map([
+            [Side.Blue, false],
+            [Side.Red, false]
+        ])
 
-        if(!boardString) this.board = this.defineNewBoard("BFLB4 1LLL1 4?2?5 27?72 6?5?6 38393 38393 6?5?6 27?72 4?2?5 1LLL1 BFLB4");
-        else {
-            // TODO: initalize board based on what the boardString says
-            this.board = this.defineNewBoard(boardString);
-        }
+        // set default boardstring
+        if(!boardString) boardString = "BFLB4 1LLL1 4?2?5 27?72 6?5?6 38393 38393 6?5?6 27?72 4?2?5 1LLL1 BFLB4"
+        this.board = this.defineNewBoard(boardString);
     }
-    revealFlags(): boolean[] {
-        return this.revealFlagArr;
+    
+    toClientJSON(side: string): string {
+        let rtnObject: any;
+        let tileArray: ITile[];
+        return JSON.stringify(this);
+    }
+
+    getRevealedFlags(): Map<Side, boolean> {
+        return this.revealedFlags;
     }
 
     isLegalSwap(pos1: Position, pos2: Position): boolean {
@@ -256,18 +259,17 @@ export class JunqiBoard implements IBoard {
             this.setPieceAt(pos2, new Piece(Rank.Empty, Side.Neither));
         
         } else if(piece1.rank === Rank.Bomb || piece2.rank === Rank.Bomb){
-            
             if(piece1.rank === Rank.FieldMarshal){
                 if(piece1.player === Side.Blue){
-                    this.revealFlagArr[0] = true;
+                    this.revealedFlags.set(Side.Blue, true);
                 } else if (piece1.player === Side.Red){
-                    this.revealFlagArr[1] = true;
+                    this.revealedFlags.set(Side.Red, true);
                 }
             } else if (piece2.rank === Rank.FieldMarshal){
                 if(piece2.player === Side.Blue){
-                    this.revealFlagArr[0] = true;
+                    this.revealedFlags.set(Side.Blue, true);
                 } else if (piece2.player === Side.Red){
-                    this.revealFlagArr[1] = true;
+                    this.revealedFlags.set(Side.Red, true);
                 }  
             }
 
@@ -280,9 +282,9 @@ export class JunqiBoard implements IBoard {
                 this.setPieceAt(pos2, piece1);
             } else if (piece1.rank = Rank.FieldMarshal){
                 if(piece1.player === Side.Blue){
-                    this.revealFlagArr[0] = true;
+                    this.revealedFlags.set(Side.Blue, true);
                 } else if (piece1.player === Side.Red){
-                    this.revealFlagArr[1] = true;
+                    this.revealedFlags.set(Side.Red, true);
                 }
             }
 
@@ -292,8 +294,8 @@ export class JunqiBoard implements IBoard {
                 this.setPieceAt(pos2, piece1);
             } else if (piece1.rank === piece2.rank){
                 if(piece1.rank === Rank.FieldMarshal) {
-                    this.revealFlagArr[0] = true;
-                    this.revealFlagArr[1] = true;
+                    this.revealedFlags.set(Side.Blue, true);
+                    this.revealedFlags.set(Side.Red, true);
                 }
 
                 this.setPieceAt(pos2, new Piece(Rank.Empty, Side.Neither));

@@ -7,7 +7,7 @@ import { Side } from "./IJunqiGame";
 export interface IBoard{
     board: ITile[][];
     winner: Side;
-    revealFlagArr: boolean [];
+    revealedFlags: Map<Side, boolean>
 
     setPieceAt(pos: Position, piece: IPiece): void;
     getPieceAt(pos: Position): IPiece;
@@ -20,7 +20,12 @@ export interface IBoard{
 
     hasPiece(pos1: Position): boolean;
     hasWinner(): Side;
-    revealFlags(): boolean [];
+    getRevealedFlags(): Map<Side, boolean>;
+
+    // im not sure if this is really good
+    // maybe make this a Side, but then DBController needs to know about sides
+    // idk which is better to have (actually leaning towards the other one)
+    toClientJSON(side: string): string;
 }
 
 export const IBoardSchema : Schema = new Schema({

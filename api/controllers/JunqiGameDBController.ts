@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { IBoard } from "../../models/interfaces/IBoard";
-import JunqiGame from "../../models/interfaces/IJunqiGame";
+import JunqiGame, { Side } from "../../models/interfaces/IJunqiGame";
 import { JunqiBoard } from "../../models/JunqiBoard";
 
 const createJunqiGame = (roomName: string, connectedSockets: Set<string>) => {
@@ -53,13 +53,13 @@ const setReadyJunqiGame = async (playerName: string, gameName: string, state: bo
             game[0].ready.set(playerName, state);
         }
 
-        let allReady : boolean = true;
+        let allReady: boolean = true;
         for (let [key, val] of game[0].ready) {
             allReady &&= val;
         }
         await game[0].save();
 
-        if(game[0].ready.size == 2 && allReady) {
+        if (game[0].ready.size == 2 && allReady) {
             console.log(`Sending all ready signal to room ${gameName}`);
             return true;
         }
@@ -144,4 +144,25 @@ const deleteJunqiGame = async (gameName: string) => {
     return JunqiGame.deleteOne({ name: gameName });
 };
 
-export { createJunqiGame, setReadyJunqiGame, hasJunqiGame, addPlayerToJunqiGame, startJunqiGame, updateJunqiGame, deletePlayerFromJunqiGame, deleteJunqiGame };
+const getJunqiGameClientJSON = async (gameName: string, socketID: string) => {
+    const game = await JunqiGame.find({ name: gameName });
+    if (game.length == 0) {
+        console.log("Tried to send Client JSON to room that doesn't exist");
+        return;
+    }
+
+    console.log(game[0].players)
+    console.log(socketID)
+    const socketIndex = game[0].players.indexOf(socketID);
+    if(socketIndex == -1) {
+        console.log("Tried to get Client JSON for socket not found in game")
+        return;
+    }
+
+    console.log(game[0].board)
+
+    return game[0].board.toClientJSON("Red");
+}
+
+
+export { getJunqiGameClientJSON, createJunqiGame, setReadyJunqiGame, hasJunqiGame, addPlayerToJunqiGame, startJunqiGame, updateJunqiGame, deletePlayerFromJunqiGame, deleteJunqiGame };
