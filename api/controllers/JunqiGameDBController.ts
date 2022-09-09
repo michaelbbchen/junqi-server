@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { IBoard } from "../../models/interfaces/IBoard";
-import JunqiGame from "../../models/interfaces/IJunqiGame";
+import JunqiGame, { IJunqiGame } from "../../models/interfaces/IJunqiGame";
 import { JunqiBoard } from "../../models/JunqiBoard";
 
 const createJunqiGame = (roomName: string, connectedSockets: Set<string>) => {
@@ -36,15 +36,26 @@ const hasJunqiGame = async (gameName: string): Promise<boolean> => {
     });
 }
 const updateJunqiGame = async (board: IBoard, gameName: string) => {
+    console.log(`Updating game ${gameName}`);
     if (await hasJunqiGame(gameName)) {
-        console.log(`Updating game ${gameName}`);
         JunqiGame.updateOne({ name: gameName }, { board: board });
     } else {
-        console.log(`Game ${gameName} does not exist`)
+        console.log(`Game ${gameName} does not exist : updating Junqi Game`)
     }
     return;
 }
 
+const getJunqiGame = async (gameName: string) : Promise<IJunqiGame> => {
+    
+    return new Promise<IJunqiGame>(async (rs, rj) => {
+        if(await hasJunqiGame(gameName)) {
+            const game = await JunqiGame.find({ name : gameName });
+            rs(game[0]);
+        } else {
+            rj(`Game ${gameName} does not exist : get Junqi Game`);
+        }
+    })
+}
 const setReadyJunqiGame = async (playerName: string, gameName: string, state: boolean) => {
     if (await hasJunqiGame(gameName)) {
         console.log(`Readying player: ${playerName} in JunqiGame: ${gameName}`);
@@ -65,8 +76,36 @@ const setReadyJunqiGame = async (playerName: string, gameName: string, state: bo
         }
         return false;
     } else {
-        console.log(`Game ${gameName} does not exist`)
+        console.log(`Game ${gameName} does not exist : set ready`)
     }
+}
+
+const flipReadyJunqiGame = async (playerName: string, gameName: string) : Promise<boolean> => {
+    console.log(`Flipping ready state for player: ${playerName} in JunqiGame: ${gameName}`);
+    return new Promise<boolean>(async (rs, rj) => {
+        if (await hasJunqiGame(gameName)) {
+            console.log(`Successfully found game ${gameName}`)
+            const game = await JunqiGame.find({ name: gameName });
+            let newBool : boolean = false;
+            if (game[0].players.includes(playerName)) {
+                newBool = !game[0].ready.get(playerName);
+                game[0].ready.set(playerName, newBool);
+            }
+
+            let allReady : boolean = true;
+            for (let [key, val] of game[0].ready) {
+                allReady &&= val;
+            }
+            await game[0].save();
+
+            if(game[0].ready.size == 2 && allReady) {
+                console.log(`Sending all ready signal to room ${gameName}`);
+            }
+            rs(newBool);
+        } else {
+            console.log(`Game ${gameName} does not exist : flipping JunqiGame`);
+        }
+    });
 }
 
 const startJunqiGame = async (gameName: string) => {
@@ -77,7 +116,7 @@ const startJunqiGame = async (gameName: string) => {
         game[0].started = true;
         await game[0].save();
     } else {
-        console.log(`Game ${gameName} does not exist`);
+        console.log(`Game ${gameName} does not exist : start JunqiGame`);
     }
 }
 
@@ -99,7 +138,7 @@ const addPlayerToJunqiGame = async (playerName: string, gameName: string) => {
                 console.log(err)
             })
     } else {
-        console.log(`Game ${gameName} does not exist`);
+        console.log(`Game ${gameName} does not exist : adding player`);
     }
     return;
 }
@@ -144,4 +183,4 @@ const deleteJunqiGame = async (gameName: string) => {
     return JunqiGame.deleteOne({ name: gameName });
 };
 
-export { createJunqiGame, setReadyJunqiGame, hasJunqiGame, addPlayerToJunqiGame, startJunqiGame, updateJunqiGame, deletePlayerFromJunqiGame, deleteJunqiGame };
+export { createJunqiGame, setReadyJunqiGame, hasJunqiGame, getJunqiGame, flipReadyJunqiGame, addPlayerToJunqiGame, startJunqiGame, updateJunqiGame, deletePlayerFromJunqiGame, deleteJunqiGame };
