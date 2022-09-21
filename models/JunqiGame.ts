@@ -1,5 +1,6 @@
 import { IJunqiGame, Side } from "./interfaces/IJunqiGame";
 import { IBoard } from "./interfaces/IBoard";
+import { JunqiBoard } from "./JunqiBoard";
 import { Position } from "./Position";
 
 export class JunqiGame implements IJunqiGame {
@@ -9,6 +10,17 @@ export class JunqiGame implements IJunqiGame {
     started: boolean;
     players: string[];
     ready: Map<string, boolean>;
+    
+    static fromGame(game : IJunqiGame): JunqiGame {
+        var jq = new this(new JunqiBoard(""));
+        jq.name = game.name;
+        jq.board = game.board;
+        jq.turn = game.turn
+        jq.started = game.started
+        jq.players = game.players;
+        jq.ready = game.ready;
+        return jq;
+    }
     
     constructor(board: IBoard){
         this.name = "";
