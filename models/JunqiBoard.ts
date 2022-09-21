@@ -34,6 +34,7 @@ export class JunqiBoard implements IBoard {
         return this.revealedFlags;
     }
 
+    
     isLegalSwap(pos1: Position, pos2: Position): boolean {
         if(!this.validPosition(pos1)) throw new Error("Position1 given is not on board!");
         if(!this.validPosition(pos2)) throw new Error("Position2 given is not on board!");
@@ -41,12 +42,14 @@ export class JunqiBoard implements IBoard {
         let piece1 = this.getPieceAt(pos1);
         let piece2 = this.getPieceAt(pos2);
 
+        //return false if user is attempting to swap with pieces from other side
         if(piece1.player === Side.Red && piece2.player === Side.Blue){
             return false;
         } else if(piece1.player === Side.Blue && piece2.player === Side.Red){
             return false;
         }
 
+        //check if piece type is being moved to a legal position
         if(piece1.player === Side.Red){
 
             if(piece1.rank === Rank.Flag){
@@ -125,6 +128,7 @@ export class JunqiBoard implements IBoard {
         let piece2 = this.getPieceAt(pos2);
 
 
+        //cant move empty, flag, and landmine pieces
         if(piece1.rank === Rank.Empty) return false;
         if(piece1.rank === Rank.Flag) return false;
         if(piece1.rank === Rank.Landmine) return false;
@@ -132,6 +136,7 @@ export class JunqiBoard implements IBoard {
 
         if(piece1.player === piece2.player) return false;
 
+        
         if(startingTile.tileType === TileType.HQ) return false;
         if(endingTile.tileType === TileType.Campsite && this.hasPiece(pos2)) return false;
 
